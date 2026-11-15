@@ -1,0 +1,205 @@
+#exhibit-fullscreen, #exhibit-fullscreen-status { display: none; }
+
+@media (max-width: 1023px) {
+    .top-nav .nav-btn--map {
+        background: linear-gradient(90deg, #961919, #c0392b);
+        border-color: #ffd700;
+    }
+}
+
+@media (min-width: 1024px) {
+    body {
+        --exhibit-gold: #eed3a0;
+        --exhibit-border: rgba(224, 180, 113, .36);
+        --exhibit-edge: clamp(24px, 3vw, 64px);
+        --exhibit-controls: clamp(46px, 3.6vw, 60px);
+        background: #160609;
+    }
+
+    body > .top-nav {
+        inset: 0 0 auto;
+        height: 80px;
+        padding: 0 var(--exhibit-edge);
+        gap: 12px;
+        background: linear-gradient(105deg, #2d0e14, #1c090d 55%, #2b0e14);
+        border-bottom: 1px solid var(--exhibit-border);
+    }
+
+    .top-nav .nav-btn,
+    .top-nav .nav-btn--map,
+    body > .ai-fab,
+    #exhibit-fullscreen {
+        min-height: 40px;
+        padding: 0 15px;
+        border: 1px solid var(--exhibit-border);
+        border-radius: 6px;
+        color: var(--exhibit-gold);
+        background: rgba(81, 30, 39, .55);
+        box-shadow: none;
+        font: inherit;
+        font-size: 14px;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: background-color .18s, border-color .18s, box-shadow .18s;
+    }
+
+    .top-nav .nav-btn:hover,
+    body > .ai-fab:hover,
+    #exhibit-fullscreen:enabled:hover,
+    .mySwiper :is(.swiper-button-next, .swiper-button-prev):not(.swiper-button-disabled):hover {
+        background-color: #582730;
+        border-color: #dbb577;
+        box-shadow: 0 0 16px rgba(219, 181, 119, .16);
+        transform: none;
+    }
+
+    .top-nav .nav-btn:focus-visible,
+    body > .ai-fab:focus-visible,
+    #exhibit-fullscreen:focus-visible,
+    .mySwiper :is(.swiper-button-next, .swiper-button-prev):focus-visible {
+        outline: 2px solid #f4d8a3;
+        outline-offset: 4px;
+    }
+
+    .top-nav .header-title {
+        order: -1;
+        margin-right: auto;
+        padding: 0;
+        color: #f5deb3;
+        background: none;
+        border: 0;
+        border-radius: 0;
+        backdrop-filter: none;
+        font-size: clamp(17px, 1.45vw, 26px);
+        font-weight: 600;
+        letter-spacing: .08em;
+    }
+
+    body > .mySwiper {
+        position: absolute;
+        inset: 80px 0 72px;
+        width: auto;
+        height: auto;
+        isolation: isolate;
+        background: radial-gradient(ellipse at 50% 34%, #4a1721, #220a10 64%, #17070a);
+    }
+
+    body > .mySwiper::before {
+        content: "";
+        position: absolute;
+        inset: -32px;
+        pointer-events: none;
+        background: linear-gradient(140deg, rgba(34, 7, 14, .66), rgba(54, 13, 22, .78) 54%, rgba(20, 5, 8, .91)),
+            var(--exhibit-slide-background, none) center / cover no-repeat;
+        filter: blur(24px);
+    }
+
+    .mySwiper > .swiper-wrapper {
+        position: relative;
+        z-index: 1;
+    }
+
+    .mySwiper .swiper-slide {
+        padding: 20px calc(var(--exhibit-edge) + var(--exhibit-controls) + 18px);
+        background: transparent;
+    }
+
+    .mySwiper .swiper-slide img {
+        display: block;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        box-shadow: 0 0 0 1px #b98e58, 0 16px 50px rgba(10, 1, 4, .65);
+    }
+
+    .mySwiper :is(.swiper-button-next, .swiper-button-prev) {
+        width: var(--exhibit-controls);
+        height: var(--exhibit-controls);
+        margin-top: calc(var(--exhibit-controls) / -2);
+        border: 1px solid var(--exhibit-border);
+        border-radius: 50%;
+        background: rgba(50, 16, 23, .86);
+        color: var(--exhibit-gold) !important;
+        transition: background-color .18s, border-color .18s, box-shadow .18s;
+    }
+
+    .mySwiper .swiper-button-next { right: var(--exhibit-edge); }
+    .mySwiper .swiper-button-prev { left: var(--exhibit-edge); }
+
+    .mySwiper :is(.swiper-button-next, .swiper-button-prev)::after {
+        content: "";
+        width: 9px;
+        height: 9px;
+        border: solid currentColor;
+        border-width: 0 2px 2px 0;
+    }
+    .mySwiper .swiper-button-next::after { transform: translateX(-2px) rotate(-45deg); }
+    .mySwiper .swiper-button-prev::after { transform: translateX(2px) rotate(135deg); }
+
+    body::after {
+        content: "";
+        position: absolute;
+        inset: auto 0 0;
+        height: 72px;
+        border-top: 1px solid var(--exhibit-border);
+        background: linear-gradient(100deg, #260c11, #1c080c 50%, #280e14);
+        pointer-events: none;
+    }
+
+    body > .page-counter {
+        bottom: 17px;
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        min-width: 92px;
+        padding: 9px 15px;
+        text-align: center;
+        color: var(--exhibit-gold);
+        background: #321019;
+        border: 1px solid var(--exhibit-border);
+        border-radius: 6px;
+        font-size: 15px;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: .08em;
+    }
+
+    body > .tips {
+        bottom: 27px;
+        left: var(--exhibit-edge);
+        color: #d4b994;
+    }
+
+    #exhibit-fullscreen {
+        display: block;
+        position: absolute;
+        right: calc(var(--exhibit-edge) + 152px);
+        bottom: 16px;
+        z-index: 10;
+    }
+    #exhibit-fullscreen:disabled { opacity: .55; cursor: default; }
+
+    body > .ai-fab {
+        bottom: 16px;
+        right: var(--exhibit-edge);
+    }
+
+    body > .ai-modal { bottom: 72px; right: var(--exhibit-edge); }
+
+    #exhibit-fullscreen-status:not(:empty) {
+        display: block;
+        position: absolute;
+        right: var(--exhibit-edge);
+        bottom: 83px;
+        z-index: 91;
+        padding: 8px 12px;
+        color: var(--exhibit-gold);
+        background: #301018;
+        border: 1px solid var(--exhibit-border);
+        border-radius: 6px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .top-nav .nav-btn, body > .ai-fab, #exhibit-fullscreen,
+    .mySwiper :is(.swiper-button-next, .swiper-button-prev) { transition: none; }
+}
