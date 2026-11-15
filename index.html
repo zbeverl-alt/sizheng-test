@@ -1,0 +1,2284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>薪火相传长征路·青春奋进正当时 - 数字化思政展厅</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { width: 100%; height: 100%; background-color: #120303; overflow: hidden; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
+        
+        .swiper { width: 100%; height: 100%; }
+        .swiper-slide { display: flex; justify-content: center; align-items: center; background-color: #120303; }
+        .swiper-slide img { max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 4px 25px rgba(0,0,0,0.6); }
+
+        /* 顶部功能栏 */
+        .top-nav {
+            position: absolute; top: 15px; left: 20px; z-index: 10;
+            display: flex; gap: 10px; align-items: center;
+        }
+
+        .nav-btn {
+            background: rgba(139, 0, 0, 0.85); color: #f7d382;
+            border: 1px solid rgba(247, 211, 130, 0.5); padding: 7px 16px;
+            border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: bold;
+            display: flex; align-items: center; gap: 6px;
+            backdrop-filter: blur(5px); transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .nav-btn:hover { background: #d63031; color: #fff; transform: translateY(-1px); }
+
+        .header-title {
+            color: #f7d382; font-size: 13px; letter-spacing: 1px;
+            background: rgba(0, 0, 0, 0.5); padding: 7px 16px; border-radius: 20px;
+            backdrop-filter: blur(5px); border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .page-counter {
+            position: absolute; bottom: 20px; right: 25px; z-index: 10;
+            color: #fff; font-size: 14px; background: rgba(0,0,0,0.6);
+            padding: 5px 16px; border-radius: 12px; font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .tips {
+            position: absolute; bottom: 20px; left: 25px; z-index: 10;
+            color: rgba(255,255,255,0.4); font-size: 12px;
+        }
+
+        .swiper-button-next, .swiper-button-prev { color: #e74c3c !important; }
+
+        /* ====== 左侧抽屉 ====== */
+        .drawer-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.6); z-index: 99;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .drawer-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .drawer {
+            position: fixed; top: 0; left: -320px; width: 300px; height: 100vh;
+            background: linear-gradient(180deg, #2b0808 0%, #150202 100%);
+            border-right: 1px solid rgba(247, 211, 130, 0.3);
+            z-index: 100; transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 25px 20px; display: flex; flex-direction: column;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.8);
+        }
+        .drawer.active { left: 0; }
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(247, 211, 130, 0.2); padding-bottom: 15px; margin-bottom: 20px; }
+        .drawer-header h3 { color: #f7d382; font-size: 18px; }
+        .close-btn { color: #aaa; font-size: 24px; cursor: pointer; }
+        .drawer-menu { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+        .drawer-menu li {
+            padding: 12px 16px; border-radius: 8px; color: #ddd; font-size: 14px; cursor: pointer;
+            background: rgba(255, 255, 255, 0.03); border-left: 3px solid transparent;
+            display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;
+        }
+        .drawer-menu li:hover { background: rgba(214, 48, 49, 0.25); color: #f7d382; border-left: 3px solid #f7d382; transform: translateX(4px); }
+        .drawer-menu li span.badge { font-size: 11px; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; color: #aaa; }
+
+        /* ====== AI 助手 ====== */
+        .ai-fab {
+            position: absolute; bottom: 70px; right: 25px; z-index: 90;
+            background: linear-gradient(135deg, #d63031, #e17055);
+            color: #fff; border: 2px solid #f7d382; padding: 10px 18px;
+            border-radius: 30px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 6px 20px rgba(214, 48, 49, 0.5); font-size: 14px; font-weight: bold;
+        }
+        .ai-modal {
+            position: fixed; bottom: 125px; right: 25px; width: 380px; height: 500px;
+            background: rgba(26, 5, 5, 0.95); border: 1px solid rgba(247, 211, 130, 0.4);
+            border-radius: 16px; z-index: 101; display: none; flex-direction: column;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.7); backdrop-filter: blur(10px); overflow: hidden;
+        }
+        .ai-modal.active { display: flex; }
+        .ai-header { background: linear-gradient(90deg, #8b0000, #400000); padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(247, 211, 130, 0.3); color: #f7d382; font-size: 14px; font-weight: bold; }
+        .ai-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .msg { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; }
+        .msg.bot { align-self: flex-start; background: rgba(255,255,255,0.08); color: #f1f2f6; border: 1px solid rgba(255,255,255,0.1); }
+        .msg.user { align-self: flex-end; background: #d63031; color: #fff; }
+        .ai-quick-prompts { padding: 8px 12px; background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 6px; overflow-x: auto; white-space: nowrap; }
+        .prompt-chip { background: rgba(247, 211, 130, 0.15); color: #f7d382; border: 1px solid rgba(247, 211, 130, 0.3); font-size: 11px; padding: 4px 10px; border-radius: 12px; cursor: pointer; }
+        .prompt-chip:hover { background: #f7d382; color: #8b0000; }
+        .ai-input-area { display: flex; padding: 10px; border-top: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.4); }
+        .ai-input { flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 8px 12px; border-radius: 8px; font-size: 13px; outline: none; }
+        .ai-send-btn { background: #d63031; color: #fff; border: none; padding: 0 14px; margin-left: 8px; border-radius: 8px; cursor: pointer; }
+
+        /* ==========================================
+           长征数字历史地图 V3.0
+           沙盘样式独立，其他页面样式保持原样
+        ========================================== */
+        .map-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 105;
+            display: none;
+            flex-direction: column;
+            gap: 0;
+            padding: 20px 22px 14px;
+            overflow: auto;
+            color: #eee7d8;
+            background: #17251f;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        .map-modal.active { display: flex; }
+
+        .lc-header {
+            flex: 0 0 auto;
+            min-height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(218,196,150,.22);
+        }
+        .lc-brand { display:flex; align-items:center; gap:13px; min-width:0; }
+        .lc-brand-mark {
+            width:43px; height:43px; flex:0 0 43px;
+            display:grid; place-items:center;
+            border:1px solid #b99b67; border-radius:50%;
+            color:#d9bd87; font-size:21px;
+        }
+        .lc-brand h2 { color:#f1e7d3; font-size:21px; letter-spacing:2px; margin:0 0 5px; }
+        .lc-brand p { color:#a9b0a5; font-size:10px; letter-spacing:1.5px; }
+        .lc-close {
+            flex:0 0 auto; padding:9px 17px; border-radius:5px;
+            color:#e6d6b8; background:transparent;
+            border:1px solid rgba(218,196,150,.4); cursor:pointer; transition:.2s;
+        }
+        .lc-close:hover { color:#fff; background:#a93832; border-color:#a93832; }
+
+        .lc-layout {
+            flex:1 0 auto;
+            min-height:560px;
+            display:grid;
+            grid-template-columns:210px minmax(360px,1fr) 292px;
+            gap:14px;
+            margin-top:16px;
+        }
+        .lc-panel {
+            min-width:0;
+            background:#22332b;
+            border:1px solid rgba(218,196,150,.17);
+            border-radius:8px;
+            overflow:hidden;
+        }
+        .lc-timeline-panel { padding:18px 13px; display:flex; flex-direction:column; }
+        .lc-section-label { color:#c5a976; font-size:10px; letter-spacing:2px; margin-bottom:7px; }
+        .lc-section-title { color:#f0e7d7; font-size:17px; margin-bottom:5px; }
+        .lc-section-subtitle { color:#89988c; font-size:11px; line-height:1.6; margin-bottom:15px; }
+        .lc-timeline-list { display:flex; flex-direction:column; gap:4px; }
+        .lc-timeline-item {
+            width:100%; display:flex; align-items:center; gap:9px;
+            padding:9px 7px; border:0; border-radius:5px;
+            background:transparent; text-align:left; cursor:pointer; transition:.2s;
+        }
+        .lc-timeline-item:hover { background:rgba(255,255,255,.07); }
+        .lc-timeline-item.active { background:rgba(182,56,50,.19); box-shadow:inset 3px 0 #c24a40; }
+        .lc-time-num {
+            width:27px; height:27px; flex:0 0 27px;
+            display:grid; place-items:center;
+            border:1px solid #69796c; border-radius:50%;
+            color:#c4b58e; font-size:10px;
+        }
+        .lc-timeline-item.active .lc-time-num { color:#fff; background:#b63832; border-color:#b63832; }
+        .lc-time-copy { min-width:0; display:flex; flex-direction:column; gap:3px; }
+        .lc-time-copy strong { color:#e7e3d9; font-size:11px; font-weight:500; }
+        .lc-time-copy small { color:#89988c; font-size:9px; }
+        .lc-timeline-item.special .lc-time-num { border-style:dashed; color:#d0b477; }
+        .lc-timeline-item.special.active .lc-time-num { border-style:solid; }
+        .lc-timeline-note { margin-top:auto; padding-top:12px; color:#829084; font-size:10px; line-height:1.7; }
+
+        .lc-map-panel {
+            min-width:0; min-height:0; display:flex; flex-direction:column;
+            overflow:hidden; border-radius:8px; background:#e8dfcc;
+            box-shadow:0 12px 35px rgba(0,0,0,.18);
+        }
+        .lc-map-toolbar {
+            min-height:44px; flex:0 0 auto;
+            display:flex; justify-content:space-between; align-items:center; gap:10px;
+            padding:0 15px; color:#354438; background:#f0e8d7;
+            border-bottom:1px solid #d3c7ac;
+        }
+        .lc-map-toolbar strong { font-size:12px; letter-spacing:1px; }
+        .lc-map-toolbar-actions { display:flex; align-items:center; gap:12px; }
+        .lc-map-toolbar-actions span { color:#7d806e; font-size:10px; white-space:nowrap; }
+        .lc-camera-btn {
+            padding:6px 10px; color:#7e493d; background:transparent;
+            border:1px solid #b9a98a; border-radius:4px; font-size:10px; cursor:pointer;
+        }
+        .lc-camera-btn:hover, .lc-camera-btn.active { background:#e2d4b9; }
+        .lc-map-canvas {
+            position:relative; flex:1 1 auto; min-height:360px; overflow:hidden;
+            background:radial-gradient(ellipse at 50% 48%,#f0e8d5 0%,#ded3b9 100%);
+        }
+        .lc-map-svg { display:block; width:100%; height:100%; min-height:360px; }
+        .lc-map-svg text { user-select:none; }
+        .lc-map-node { cursor:pointer; outline:none; }
+        .lc-node-dot { fill:#c5a66a; stroke:#fff8e8; stroke-width:3; transition:.2s; }
+        .lc-map-node.active .lc-node-dot { fill:#b63832; stroke:#fff; stroke-width:4; }
+        .lc-map-node:hover .lc-node-dot, .lc-map-node:focus .lc-node-dot { stroke:#8d342e; stroke-width:5; }
+        .lc-node-label {
+            fill:#354438; font-size:13px; font-weight:bold;
+            paint-order:stroke; stroke:#f1e8d5; stroke-width:5px; stroke-linejoin:round;
+        }
+        .lc-map-node.active .lc-node-label { fill:#a72e29; }
+        .lc-special-node { cursor:pointer; outline:none; }
+        .lc-special-node:hover, .lc-special-node:focus { filter:drop-shadow(0 0 7px rgba(182,56,50,.65)); }
+        .lc-map-note {
+            position:absolute; left:13px; bottom:11px; max-width:75%;
+            padding:6px 9px; color:#5b604d; background:rgba(247,241,226,.9);
+            border:1px solid rgba(126,111,78,.25); border-radius:4px;
+            font-size:9px; line-height:1.5;
+        }
+        .lc-map-legend {
+            flex:0 0 auto; display:flex; flex-wrap:wrap; gap:14px; align-items:center;
+            padding:9px 14px; color:#526052; background:#eee5d2;
+            border-top:1px solid #d3c7ac; font-size:10px;
+        }
+        .lc-legend-item { display:flex; align-items:center; gap:6px; }
+        .lc-legend-line { width:22px; height:3px; background:#b63832; }
+        .lc-legend-dot { width:8px; height:8px; border-radius:50%; background:#c4a66a; }
+        .lc-legend-star { color:#a77d38; font-size:13px; }
+
+        .lc-playback { flex:0 0 auto; padding:12px 15px; color:#eee7d8; background:#22332b; }
+        .lc-playback-top { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:9px; }
+        .lc-playback-info { display:flex; align-items:baseline; gap:7px; white-space:nowrap; }
+        .lc-playback-info strong { color:#e5d2a8; font: bold 19px monospace; }
+        .lc-playback-info span { color:#a0aa9f; font-size:10px; }
+        .lc-controls { display:flex; flex-wrap:wrap; gap:6px; }
+        .lc-control-btn {
+            padding:7px 11px; border:1px solid rgba(222,207,171,.35);
+            border-radius:4px; color:#e8ddc5; background:transparent;
+            font-size:10px; cursor:pointer; transition:.2s;
+        }
+        .lc-control-btn:hover { background:rgba(255,255,255,.1); }
+        .lc-control-btn.primary { color:#fff; background:#a93832; border-color:#a93832; }
+        .lc-control-btn.primary:hover { background:#c34840; }
+        .lc-progress { display:block; width:100%; height:5px; accent-color:#c34a40; cursor:pointer; }
+        .lc-progress-bottom { display:flex; justify-content:space-between; gap:8px; margin-top:7px; color:#89988c; font-size:9px; }
+
+        .lc-event-panel { display:flex; flex-direction:column; padding:18px; }
+        .lc-event-top { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:16px; }
+        .lc-event-tag { padding:5px 8px; color:#e1c895; background:rgba(182,56,50,.25); border:1px solid rgba(195,74,64,.35); border-radius:3px; font-size:9px; }
+        .lc-event-index { color:#879589; font:11px monospace; }
+        .lc-event-date { color:#c6a873; font-size:11px; letter-spacing:1px; margin-bottom:8px; }
+        .lc-event-title { color:#f0e5d1; font-size:23px; line-height:1.4; margin:0 0 11px; }
+        .lc-event-divider { width:42px; height:2px; background:#b63832; margin-bottom:14px; }
+        .lc-event-figure { flex:0 0 auto; margin:0 0 12px; overflow:hidden; border:1px solid rgba(218,196,150,.2); border-radius:5px; background:#192820; cursor:pointer; }
+        .lc-event-image { display:block; width:100%; height:142px; object-fit:cover; object-position:center; transition:transform .35s; }
+        .lc-event-image[hidden], .lc-image-fallback[hidden] { display:none; }
+        .lc-event-figure:hover .lc-event-image { transform:scale(1.025); }
+        .lc-image-fallback { height:142px; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:7px; color:#c5a976; background:linear-gradient(135deg,#293c30,#18271f); }
+        .lc-image-fallback strong { font-size:12px; font-weight:500; }
+        .lc-image-fallback small { color:#849184; font-size:9px; }
+        .lc-image-icon { font-size:30px; opacity:.65; }
+        .lc-event-figure figcaption { padding:7px 9px; color:#b6aa91; background:#1e3027; border-top:1px solid rgba(218,196,150,.13); font-size:9px; line-height:1.5; }
+        .lc-event-desc { color:#c2c9bf; font-size:12px; line-height:1.85; text-align:justify; }
+        .lc-archive-open-btn { margin:11px 0; padding:9px 10px; color:#e4c78e; background:rgba(197,169,118,.08); border:1px solid rgba(197,169,118,.28); border-radius:4px; text-align:left; cursor:pointer; font-size:10px; }
+        .lc-archive-open-btn:hover { background:rgba(169,56,50,.25); border-color:#a93832; }
+        .lc-event-spirit { margin-top:auto; padding:12px; color:#e2cfaa; background:rgba(197,169,118,.09); border-left:3px solid #c5a976; border-radius:3px; font-size:11px; line-height:1.75; }
+        .lc-event-spirit strong { display:block; margin-bottom:5px; color:#c5a976; font-size:9px; letter-spacing:1px; }
+        .lc-footer { flex:0 0 auto; padding-top:10px; text-align:center; color:#718075; font-size:9px; letter-spacing:1px; }
+
+        /* 全屏历史影像展厅 */
+        .lc-viewer { position:fixed; inset:0; z-index:300; display:none; justify-content:center; align-items:center; padding:22px; }
+        .lc-viewer.active { display:flex; }
+        .lc-viewer-backdrop { position:absolute; inset:0; background:rgba(5,12,8,.93); backdrop-filter:blur(8px); }
+        .lc-viewer-window {
+            position:relative; z-index:1; width:min(1180px,100%); max-height:calc(100vh - 44px);
+            display:flex; flex-direction:column; overflow:auto;
+            background:#1a2a21; border:1px solid rgba(197,169,118,.35); border-radius:9px;
+            box-shadow:0 25px 90px rgba(0,0,0,.55); animation:lcViewerEnter .25s ease;
+        }
+        @keyframes lcViewerEnter { from {opacity:0; transform:translateY(12px) scale(.99);} to {opacity:1; transform:translateY(0) scale(1);} }
+        .lc-viewer-header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:17px 22px; border-bottom:1px solid rgba(197,169,118,.2); }
+        .lc-viewer-eyebrow { color:#bda16d; font-size:9px; letter-spacing:2px; margin-bottom:5px; }
+        .lc-viewer-heading { color:#eee4d1; font-size:18px; font-weight:bold; letter-spacing:1px; }
+        .lc-viewer-close { width:36px; height:36px; flex:0 0 36px; border:1px solid rgba(197,169,118,.35); border-radius:50%; color:#e7d9bd; background:transparent; font-size:17px; cursor:pointer; }
+        .lc-viewer-close:hover { background:#a93832; border-color:#a93832; }
+        .lc-viewer-content { display:grid; grid-template-columns:1.05fr .95fr; gap:26px; padding:22px; min-height:0; }
+        .lc-viewer-visual { min-width:0; display:flex; flex-direction:column; }
+        .lc-viewer-photo { position:relative; min-height:270px; aspect-ratio:16/10; display:grid; place-items:center; overflow:hidden; background:#101a14; border:1px solid rgba(197,169,118,.25); border-radius:5px; }
+        .lc-viewer-photo img { width:100%; height:100%; max-height:510px; object-fit:contain; }
+        .lc-viewer-photo img[hidden] { display:none; }
+        .lc-viewer-fallback { display:flex; flex-direction:column; align-items:center; gap:10px; color:#c5a976; }
+        .lc-viewer-fallback[hidden] { display:none; }
+        .lc-viewer-fallback span { font-size:58px; opacity:.5; }
+        .lc-viewer-fallback strong { font-size:14px; font-weight:500; }
+        .lc-viewer-fallback small { color:#859187; font-size:10px; }
+        .lc-viewer-arrow { position:absolute; top:50%; transform:translateY(-50%); width:38px; height:52px; border:0; color:#fff; background:rgba(15,27,20,.78); font-size:29px; cursor:pointer; }
+        .lc-viewer-arrow:hover { background:#a93832; }
+        .lc-viewer-arrow.prev { left:9px; }
+        .lc-viewer-arrow.next { right:9px; }
+        .lc-viewer-photo-caption { padding:10px 3px; color:#c0b396; font-size:10px; line-height:1.6; }
+        .lc-viewer-counter { color:#c5a976; font:11px monospace; }
+        .lc-viewer-article { min-width:0; display:flex; flex-direction:column; }
+        .lc-viewer-tag { align-self:flex-start; padding:5px 9px; color:#e4c78e; background:rgba(169,56,50,.2); border:1px solid rgba(169,56,50,.4); border-radius:3px; font-size:9px; }
+        .lc-viewer-date { margin-top:15px; color:#c6a873; font-size:11px; letter-spacing:1px; }
+        .lc-viewer-article h2 { margin:7px 0 9px; color:#f0e7d6; font-size:25px; line-height:1.4; }
+        .lc-viewer-lead { color:#c5a976; font-size:12px; line-height:1.8; margin:0 0 12px; }
+        .lc-archive-section { padding:10px 0; border-top:1px solid rgba(255,255,255,.09); }
+        .lc-archive-section h3 { margin:0 0 6px; color:#c5a976; font-size:11px; font-weight:600; }
+        .lc-archive-section p { margin:0; color:#c1c9bf; font-size:11px; line-height:1.8; text-align:justify; }
+        .lc-viewer-spirit { margin-top:auto; padding:12px 14px; background:rgba(197,169,118,.09); border-left:3px solid #c5a976; }
+        .lc-viewer-spirit span { color:#c5a976; font-size:10px; font-weight:bold; }
+        .lc-viewer-spirit p { margin:6px 0 0; color:#e0d2b6; font-size:11px; line-height:1.7; }
+        .lc-viewer-source { margin-top:10px; color:#839084; font-size:9px; line-height:1.6; }
+        .lc-viewer-footer { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:12px 22px; border-top:1px solid rgba(197,169,118,.2); color:#879388; font-size:10px; }
+        .lc-viewer-footer button { padding:8px 12px; color:#e3d5b9; background:transparent; border:1px solid rgba(197,169,118,.3); border-radius:4px; cursor:pointer; font-size:10px; }
+        .lc-viewer-footer button:hover { background:#a93832; border-color:#a93832; }
+
+        @media (max-width:1100px) {
+            .lc-layout { grid-template-columns:185px minmax(320px,1fr); }
+            .lc-event-panel { grid-column:1 / -1; min-height:0; display:grid; grid-template-columns:1fr 1fr; column-gap:18px; }
+            .lc-event-top, .lc-event-date, .lc-event-title, .lc-event-divider, .lc-event-desc, .lc-archive-open-btn, .lc-event-spirit { grid-column:1 / -1; }
+            .lc-event-figure { max-width:420px; }
+            .lc-event-spirit { margin-top:8px; }
+        }
+        @media (max-width:760px) {
+            .map-modal { padding:11px; }
+            .lc-header { align-items:flex-start; }
+            .lc-brand h2 { font-size:16px; }
+            .lc-brand p { font-size:8px; letter-spacing:1px; }
+            .lc-close { padding:7px 9px; font-size:10px; }
+            .lc-layout { display:flex; flex-direction:column; min-height:0; }
+            .lc-map-panel { order:1; }
+            .lc-timeline-panel { order:2; }
+            .lc-event-panel { order:3; display:flex; }
+            .lc-map-canvas, .lc-map-svg { min-height:320px; }
+            .lc-timeline-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+            .lc-timeline-note { margin-top:10px; }
+            .lc-playback-top { align-items:flex-start; flex-direction:column; }
+            .lc-event-title { font-size:21px; }
+            .lc-viewer { padding:7px; }
+            .lc-viewer-window { max-height:calc(100vh - 14px); }
+            .lc-viewer-content { grid-template-columns:1fr; gap:15px; padding:13px; }
+            .lc-viewer-photo { min-height:205px; }
+            .lc-viewer-article h2 { font-size:21px; }
+            .lc-viewer-header { padding:12px 14px; }
+            .lc-viewer-heading { font-size:14px; }
+            .lc-viewer-footer { padding:10px; }
+            .lc-viewer-footer span { display:none; }
+        }
+    
+        /* ==========================================
+           浏览器视口自适应补丁
+           只作用于长征沙盘，不改变课件/导航/AI模块
+        ========================================== */
+
+        /* 桌面端：沙盘严格占满浏览器可视高度 */
+        .map-modal {
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            min-height: 0;
+            padding: clamp(8px, 1.2vh, 18px) clamp(10px, 1.1vw, 22px) clamp(6px, .9vh, 12px);
+            overflow: hidden;
+        }
+
+        .lc-header {
+            min-height: 0;
+            padding-bottom: clamp(7px, 1vh, 12px);
+        }
+
+        .lc-brand-mark {
+            width: clamp(34px, 5vh, 43px);
+            height: clamp(34px, 5vh, 43px);
+            flex-basis: clamp(34px, 5vh, 43px);
+        }
+
+        .lc-brand h2 {
+            font-size: clamp(15px, 1.1vw, 21px);
+        }
+
+        .lc-layout {
+            flex: 1 1 0%;
+            min-width: 0;
+            min-height: 0;
+            grid-template-columns:
+                clamp(160px, 11vw, 210px)
+                minmax(0, 1fr)
+                clamp(240px, 15vw, 292px);
+            grid-template-rows: minmax(0, 1fr);
+            gap: clamp(8px, .8vw, 14px);
+            margin-top: clamp(8px, 1vh, 14px);
+        }
+
+        .lc-panel {
+            min-height: 0;
+        }
+
+        /* 恢复桌面三栏状态，覆盖旧版 1100px 断点的两栏规则 */
+        .lc-event-panel {
+            grid-column: auto;
+            display: flex;
+        }
+
+        /* 两侧资料栏在内容较多时各自滚动，不撑高整个页面 */
+        .lc-timeline-panel,
+        .lc-event-panel {
+            min-height: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(197,169,118,.45) transparent;
+        }
+
+        .lc-timeline-panel::-webkit-scrollbar,
+        .lc-event-panel::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .lc-timeline-panel::-webkit-scrollbar-thumb,
+        .lc-event-panel::-webkit-scrollbar-thumb {
+            background: rgba(197,169,118,.4);
+            border-radius: 8px;
+        }
+
+        /* 中央地图自动取得三栏中剩余的全部高度 */
+        .lc-map-panel {
+            width: 100%;
+            height: 100%;
+            min-width: 0;
+            min-height: 0;
+        }
+
+        .lc-map-toolbar {
+            min-height: clamp(34px, 5.5vh, 44px);
+        }
+
+        .lc-map-canvas {
+            flex: 1 1 0%;
+            min-width: 0;
+            min-height: 0;
+        }
+
+        .lc-map-svg {
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+        }
+
+        .lc-map-legend {
+            flex: 0 0 auto;
+            padding: clamp(6px, .9vh, 9px) clamp(9px, .8vw, 14px);
+        }
+
+        .lc-playback {
+            flex: 0 0 auto;
+            padding: clamp(7px, 1.2vh, 12px) clamp(9px, .9vw, 15px);
+        }
+
+        .lc-footer {
+            flex: 0 0 auto;
+            padding-top: clamp(4px, .6vh, 8px);
+            line-height: 1.2;
+        }
+
+        /* 历史档案弹窗也按浏览器可视高度约束 */
+        .lc-viewer {
+            padding: clamp(7px, 1.5vh, 22px);
+        }
+
+        .lc-viewer-window {
+            max-height: calc(100dvh - 2 * clamp(7px, 1.5vh, 22px));
+            overflow: hidden;
+        }
+
+        .lc-viewer-content {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow: auto;
+        }
+
+        .lc-viewer-article {
+            min-height: 0;
+        }
+
+        .lc-viewer-photo {
+            min-height: clamp(180px, 30vh, 340px);
+            max-height: 48vh;
+        }
+
+        .lc-viewer-photo img {
+            max-height: 48vh;
+        }
+
+        /* 中等宽度：改成地图+时间轴，上方/下方资料区，允许页面纵向滚动 */
+        @media (max-width: 980px) {
+            .map-modal {
+                height: auto;
+                min-height: 100vh;
+                min-height: 100dvh;
+                overflow-x: hidden;
+                overflow-y: auto;
+                padding: 12px;
+            }
+
+            .lc-layout {
+                flex: 0 0 auto;
+                min-height: 0;
+                grid-template-columns: minmax(155px, .34fr) minmax(0, 1fr);
+                grid-template-rows: auto auto;
+                align-items: stretch;
+            }
+
+            .lc-timeline-panel {
+                grid-column: 1;
+                grid-row: 1;
+                overflow: visible;
+            }
+
+            .lc-map-panel {
+                grid-column: 2;
+                grid-row: 1;
+                height: auto;
+                min-height: min(72vh, 620px);
+            }
+
+            .lc-map-canvas {
+                min-height: clamp(280px, 46vh, 460px);
+            }
+
+            .lc-event-panel {
+                grid-column: 1 / -1;
+                grid-row: 2;
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+                column-gap: 18px;
+                overflow: visible;
+            }
+
+            .lc-event-top,
+            .lc-event-date,
+            .lc-event-title,
+            .lc-event-divider,
+            .lc-event-desc,
+            .lc-archive-open-btn,
+            .lc-event-spirit {
+                grid-column: 1 / -1;
+            }
+
+            .lc-event-figure {
+                max-width: 100%;
+            }
+
+            .lc-event-spirit {
+                margin-top: 8px;
+            }
+
+            .lc-footer {
+                padding-bottom: 8px;
+            }
+        }
+
+        /* 手机/窄屏：单列布局，内容完整可上下滚动 */
+        @media (max-width: 760px) {
+            .map-modal {
+                height: auto;
+                min-height: 100vh;
+                min-height: 100dvh;
+                overflow-x: hidden;
+                overflow-y: auto;
+                padding: 10px;
+            }
+
+            .lc-header {
+                align-items: center;
+                gap: 8px;
+            }
+
+            .lc-brand {
+                gap: 8px;
+            }
+
+            .lc-brand-mark {
+                width: 34px;
+                height: 34px;
+                flex-basis: 34px;
+                font-size: 17px;
+            }
+
+            .lc-brand h2 {
+                font-size: 15px;
+                letter-spacing: 1px;
+            }
+
+            .lc-brand p {
+                font-size: 7px;
+                letter-spacing: .6px;
+            }
+
+            .lc-close {
+                padding: 7px 9px;
+                font-size: 10px;
+                white-space: nowrap;
+            }
+
+            .lc-layout {
+                display: flex;
+                flex: 0 0 auto;
+                flex-direction: column;
+                min-height: 0;
+                gap: 10px;
+            }
+
+            .lc-map-panel {
+                order: 1;
+                height: auto;
+                min-height: 0;
+            }
+
+            .lc-map-canvas {
+                height: clamp(290px, 48vh, 430px);
+                min-height: 0;
+                flex: 0 0 auto;
+            }
+
+            .lc-map-svg {
+                height: 100%;
+                min-height: 0;
+            }
+
+            .lc-timeline-panel {
+                order: 2;
+                overflow: visible;
+            }
+
+            .lc-timeline-list {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .lc-timeline-note {
+                margin-top: 10px;
+            }
+
+            .lc-event-panel {
+                order: 3;
+                display: flex;
+                overflow: visible;
+            }
+
+            .lc-playback-top {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .lc-controls {
+                width: 100%;
+            }
+
+            .lc-control-btn {
+                flex: 1 1 auto;
+            }
+
+            .lc-viewer {
+                padding: 7px;
+            }
+
+            .lc-viewer-window {
+                max-height: calc(100dvh - 14px);
+                overflow-y: auto;
+            }
+
+            .lc-viewer-content {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 13px;
+                overflow: visible;
+            }
+
+            .lc-viewer-photo {
+                min-height: 205px;
+                max-height: none;
+            }
+
+            .lc-viewer-photo img {
+                max-height: 55vh;
+            }
+
+            .lc-viewer-article h2 {
+                font-size: 21px;
+            }
+
+            .lc-viewer-header {
+                padding: 12px 14px;
+            }
+
+            .lc-viewer-heading {
+                font-size: 14px;
+            }
+
+            .lc-viewer-footer {
+                padding: 10px;
+            }
+
+            .lc-viewer-footer span {
+                display: none;
+            }
+        }
+
+        /* 桌面端低高度窗口：进一步压缩装饰间距，保证地图留在首屏 */
+        @media (min-width: 981px) and (max-height: 680px) {
+            .map-modal {
+                padding-top: 7px;
+                padding-bottom: 5px;
+            }
+
+            .lc-header {
+                padding-bottom: 6px;
+            }
+
+            .lc-brand-mark {
+                width: 32px;
+                height: 32px;
+                flex-basis: 32px;
+            }
+
+            .lc-brand h2 {
+                font-size: 16px;
+                margin-bottom: 2px;
+            }
+
+            .lc-brand p {
+                font-size: 8px;
+            }
+
+            .lc-layout {
+                margin-top: 7px;
+                gap: 8px;
+            }
+
+            .lc-timeline-panel,
+            .lc-event-panel {
+                padding: 10px;
+            }
+
+            .lc-section-subtitle {
+                margin-bottom: 7px;
+            }
+
+            .lc-timeline-item {
+                padding: 5px 6px;
+            }
+
+            .lc-time-num {
+                width: 22px;
+                height: 22px;
+                flex-basis: 22px;
+            }
+
+            .lc-event-top {
+                margin-bottom: 8px;
+            }
+
+            .lc-event-title {
+                font-size: clamp(17px, 2.6vh, 22px);
+                margin-bottom: 7px;
+            }
+
+            .lc-event-figure {
+                margin-bottom: 8px;
+            }
+
+            .lc-event-image,
+            .lc-image-fallback {
+                height: clamp(76px, 15vh, 120px);
+            }
+
+            .lc-event-desc {
+                font-size: 11px;
+                line-height: 1.6;
+            }
+
+            .lc-archive-open-btn {
+                margin: 7px 0;
+                padding: 7px 8px;
+            }
+
+            .lc-event-spirit {
+                padding: 8px;
+                font-size: 10px;
+            }
+
+            .lc-map-toolbar {
+                min-height: 32px;
+            }
+
+            .lc-map-legend {
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
+
+            .lc-playback {
+                padding-top: 6px;
+                padding-bottom: 6px;
+            }
+
+            .lc-control-btn {
+                padding: 5px 8px;
+            }
+
+            .lc-footer {
+                padding-top: 3px;
+            }
+        }
+
+    
+        /* =====================================================
+           V4：长征沙盘视口布局重构
+           桌面端采用 CSS Grid 三行结构，避免 flex 高度塌陷/撑开
+           只作用于 #mapModal，不改动其他课件模块
+        ====================================================== */
+
+        @media (min-width: 981px) {
+            html:has(#mapModal.active),
+            body:has(#mapModal.active) {
+                overflow: hidden !important;
+                height: 100% !important;
+            }
+
+            #mapModal {
+                position: fixed !important;
+                inset: 0 !important;
+                z-index: 105 !important;
+
+                display: none;
+                box-sizing: border-box !important;
+
+                width: 100% !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                min-height: 0 !important;
+                max-height: 100dvh !important;
+
+                /* 顶栏 / 三栏主体 / 底栏 */
+                grid-template-columns: minmax(0, 1fr) !important;
+                grid-template-rows: auto minmax(0, 1fr) auto !important;
+                row-gap: clamp(5px, .8vh, 10px) !important;
+
+                padding:
+                    clamp(6px, 1vh, 12px)
+                    clamp(8px, 1vw, 18px)
+                    clamp(5px, .7vh, 9px) !important;
+
+                overflow: hidden !important;
+            }
+
+            #mapModal.active {
+                display: grid !important;
+            }
+
+            #mapModal > .lc-header {
+                grid-row: 1;
+                min-width: 0 !important;
+                min-height: 0 !important;
+                height: auto !important;
+                padding: 0 0 clamp(5px, .8vh, 10px) !important;
+                margin: 0 !important;
+                overflow: hidden !important;
+            }
+
+            #mapModal > .lc-layout {
+                grid-row: 2;
+
+                display: grid !important;
+                grid-template-columns:
+                    clamp(155px, 10.5vw, 205px)
+                    minmax(0, 1fr)
+                    clamp(235px, 14vw, 285px) !important;
+                grid-template-rows: minmax(0, 1fr) !important;
+
+                width: 100% !important;
+                height: 100% !important;
+                min-width: 0 !important;
+                min-height: 0 !important;
+                max-height: 100% !important;
+
+                margin: 0 !important;
+                gap: clamp(7px, .75vw, 13px) !important;
+
+                overflow: hidden !important;
+                align-items: stretch !important;
+            }
+
+            #mapModal .lc-panel {
+                min-width: 0 !important;
+                min-height: 0 !important;
+                height: 100% !important;
+                max-height: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            #mapModal .lc-timeline-panel,
+            #mapModal .lc-event-panel {
+                display: flex !important;
+                flex-direction: column !important;
+                overflow-x: hidden !important;
+                overflow-y: auto !important;
+                overscroll-behavior: contain;
+                scrollbar-width: thin;
+                scrollbar-color: rgba(197,169,118,.4) transparent;
+            }
+
+            #mapModal .lc-map-panel {
+                display: flex !important;
+                flex-direction: column !important;
+                min-width: 0 !important;
+                min-height: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                max-height: 100% !important;
+                overflow: hidden !important;
+            }
+
+            #mapModal .lc-map-toolbar {
+                flex: 0 0 auto !important;
+                min-height: clamp(32px, 5vh, 44px) !important;
+                height: auto !important;
+            }
+
+            #mapModal .lc-map-canvas {
+                position: relative !important;
+                flex: 1 1 0 !important;
+
+                width: 100% !important;
+                height: 0 !important;
+                min-height: 0 !important;
+                max-height: none !important;
+
+                overflow: hidden !important;
+            }
+
+            #mapModal .lc-map-svg {
+                display: block !important;
+                width: 100% !important;
+                height: 100% !important;
+                min-height: 0 !important;
+                max-height: 100% !important;
+            }
+
+            #mapModal .lc-map-legend,
+            #mapModal .lc-playback {
+                flex: 0 0 auto !important;
+                min-height: 0 !important;
+            }
+
+            #mapModal > .lc-footer {
+                grid-row: 3;
+                min-height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: hidden !important;
+                line-height: 1.2 !important;
+            }
+        }
+
+        /* 桌面端矮窗口：压缩非核心间距，优先保留地图与播放条 */
+        @media (min-width: 981px) and (max-height: 720px) {
+            #mapModal {
+                row-gap: 5px !important;
+                padding-top: 5px !important;
+                padding-bottom: 4px !important;
+            }
+
+            #mapModal > .lc-header {
+                padding-bottom: 5px !important;
+            }
+
+            #mapModal .lc-brand-mark {
+                width: 32px !important;
+                height: 32px !important;
+                flex-basis: 32px !important;
+            }
+
+            #mapModal .lc-brand h2 {
+                font-size: 16px !important;
+                margin-bottom: 2px !important;
+            }
+
+            #mapModal .lc-brand p {
+                font-size: 8px !important;
+            }
+
+            #mapModal > .lc-layout {
+                gap: 7px !important;
+            }
+
+            #mapModal .lc-timeline-panel,
+            #mapModal .lc-event-panel {
+                padding: 8px !important;
+            }
+
+            #mapModal .lc-section-subtitle {
+                margin-bottom: 6px !important;
+            }
+
+            #mapModal .lc-timeline-item {
+                padding-top: 5px !important;
+                padding-bottom: 5px !important;
+            }
+
+            #mapModal .lc-time-num {
+                width: 22px !important;
+                height: 22px !important;
+                flex-basis: 22px !important;
+            }
+
+            #mapModal .lc-event-top {
+                margin-bottom: 7px !important;
+            }
+
+            #mapModal .lc-event-title {
+                font-size: clamp(16px, 2.5vh, 21px) !important;
+                margin-bottom: 6px !important;
+            }
+
+            #mapModal .lc-event-image,
+            #mapModal .lc-image-fallback {
+                height: clamp(72px, 13vh, 105px) !important;
+            }
+
+            #mapModal .lc-event-figure {
+                margin-bottom: 7px !important;
+            }
+
+            #mapModal .lc-event-desc {
+                font-size: 10px !important;
+                line-height: 1.55 !important;
+            }
+
+            #mapModal .lc-archive-open-btn {
+                margin-top: 6px !important;
+                margin-bottom: 6px !important;
+                padding: 6px 8px !important;
+            }
+
+            #mapModal .lc-event-spirit {
+                padding: 7px !important;
+                font-size: 10px !important;
+            }
+
+            #mapModal .lc-playback {
+                padding-top: 6px !important;
+                padding-bottom: 6px !important;
+            }
+
+            #mapModal .lc-control-btn {
+                padding: 5px 8px !important;
+            }
+        }
+
+        /* 平板：允许纵向滚动，地图与时间轴并排，档案放在下方 */
+        @media (min-width: 761px) and (max-width: 980px) {
+            html:has(#mapModal.active),
+            body:has(#mapModal.active) {
+                overflow: hidden !important;
+            }
+
+            #mapModal {
+                position: fixed !important;
+                inset: 0 !important;
+                display: none;
+                width: 100% !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                min-height: 0 !important;
+                box-sizing: border-box !important;
+                padding: 10px !important;
+                overflow-x: hidden !important;
+                overflow-y: auto !important;
+            }
+
+            #mapModal.active {
+                display: flex !important;
+            }
+
+            #mapModal > .lc-header {
+                flex: 0 0 auto !important;
+                min-height: 0 !important;
+                padding-bottom: 8px !important;
+            }
+
+            #mapModal > .lc-layout {
+                flex: 0 0 auto !important;
+                display: grid !important;
+                grid-template-columns: minmax(155px, .36fr) minmax(0, 1fr) !important;
+                grid-template-rows: minmax(390px, 62vh) auto !important;
+                height: auto !important;
+                min-height: 0 !important;
+                margin-top: 9px !important;
+                gap: 9px !important;
+                overflow: visible !important;
+            }
+
+            #mapModal .lc-timeline-panel {
+                grid-column: 1;
+                grid-row: 1;
+                height: 100% !important;
+                overflow-y: auto !important;
+            }
+
+            #mapModal .lc-map-panel {
+                grid-column: 2;
+                grid-row: 1;
+                height: 100% !important;
+                min-height: 0 !important;
+            }
+
+            #mapModal .lc-map-canvas {
+                flex: 1 1 0 !important;
+                height: 0 !important;
+                min-height: 0 !important;
+            }
+
+            #mapModal .lc-map-svg {
+                height: 100% !important;
+                min-height: 0 !important;
+            }
+
+            #mapModal .lc-event-panel {
+                grid-column: 1 / -1;
+                grid-row: 2;
+                display: flex !important;
+                height: auto !important;
+                max-height: none !important;
+                overflow: visible !important;
+            }
+
+            #mapModal > .lc-footer {
+                flex: 0 0 auto !important;
+                padding-top: 8px !important;
+            }
+        }
+
+        /* 手机：单列自然流式布局，避免挤压内容 */
+        @media (max-width: 760px) {
+            html:has(#mapModal.active),
+            body:has(#mapModal.active) {
+                overflow: hidden !important;
+            }
+
+            #mapModal {
+                position: fixed !important;
+                inset: 0 !important;
+                display: none;
+                width: 100% !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                min-height: 0 !important;
+                box-sizing: border-box !important;
+                padding: 9px !important;
+                overflow-x: hidden !important;
+                overflow-y: auto !important;
+            }
+
+            #mapModal.active {
+                display: flex !important;
+            }
+
+            #mapModal > .lc-header {
+                flex: 0 0 auto !important;
+                min-height: 0 !important;
+                padding-bottom: 8px !important;
+            }
+
+            #mapModal > .lc-layout {
+                flex: 0 0 auto !important;
+                display: flex !important;
+                flex-direction: column !important;
+                height: auto !important;
+                min-height: 0 !important;
+                margin-top: 8px !important;
+                gap: 9px !important;
+                overflow: visible !important;
+            }
+
+            #mapModal .lc-map-panel {
+                order: 1;
+                display: flex !important;
+                height: auto !important;
+                min-height: 0 !important;
+            }
+
+            #mapModal .lc-map-canvas {
+                flex: 0 0 auto !important;
+                height: clamp(270px, 43vh, 390px) !important;
+                min-height: 0 !important;
+            }
+
+            #mapModal .lc-map-svg {
+                width: 100% !important;
+                height: 100% !important;
+                min-height: 0 !important;
+            }
+
+            #mapModal .lc-timeline-panel {
+                order: 2;
+                height: auto !important;
+                max-height: none !important;
+                overflow: visible !important;
+            }
+
+            #mapModal .lc-timeline-list {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            }
+
+            #mapModal .lc-event-panel {
+                order: 3;
+                display: flex !important;
+                height: auto !important;
+                max-height: none !important;
+                overflow: visible !important;
+            }
+
+            #mapModal > .lc-footer {
+                flex: 0 0 auto !important;
+                padding: 8px 0 !important;
+            }
+        }
+
+    
+        /* 历史图片来源链接 */
+        .lc-viewer-source {
+            display: inline-block;
+            color: #9caa9d;
+            text-decoration: underline;
+            text-decoration-color: rgba(197,169,118,.45);
+            text-underline-offset: 3px;
+            line-height: 1.7;
+        }
+        .lc-viewer-source:hover { color: #d8c18f; }
+/* ==========================================
+           微信内置浏览器 & 移动端全屏幕适配补丁
+        ========================================== */
+        @media (max-width: 768px) {
+            /* 1. 解决手机顶部标题过长把按钮挤出屏幕的问题 */
+            .top-nav {
+                left: 10px; top: 10px; right: 10px;
+                gap: 6px;
+            }
+            .header-title {
+                display: none; /* 手机端隐藏过长的长征长标题，优先保证功能按钮点按 */
+            }
+            .nav-btn {
+                padding: 5px 10px; font-size: 11px;
+            }
+
+            /* 2. 解决 AI 助教弹窗在 375px/390px 窄屏手机上横向溢出的问题 */
+            .ai-modal {
+                width: calc(100vw - 24px) !important;
+                right: 12px !important;
+                left: 12px !important;
+                bottom: 80px !important;
+                height: 65vh !important;
+            }
+            .ai-fab {
+                bottom: 60px; right: 15px; padding: 7px 14px; font-size: 12px;
+            }
+
+            /* 3. 针对微信底部导航栏视口修正 */
+            body, html, .swiper {
+                height: 100%;
+                height: -webkit-fill-available;
+            }
+        }
+</style>
+    <link rel="stylesheet" href="展厅-阶段5.css">
+</head>
+<body>
+
+    <!-- 顶部导航 -->
+    <div class="top-nav">
+        <button class="nav-btn" onclick="toggleDrawer()">
+            <span>☰</span> 课程章节
+        </button>
+        <button class="nav-btn nav-btn--map" onclick="toggleMapModal()">
+            <span>🧭</span> 动态长征全景沙盘
+        </button>
+        <div class="header-title">
+            🚩 薪火相传长征路 · 青春奋进正当时
+        </div>
+    </div>
+
+    <!-- 左侧抽屉 -->
+    <div class="drawer-overlay" id="overlay" onclick="toggleDrawer()"></div>
+    <div class="drawer" id="drawer">
+        <div class="drawer-header">
+            <h3>📑 课件篇章导航</h3>
+            <span class="close-btn" onclick="toggleDrawer()">&times;</span>
+        </div>
+        <ul class="drawer-menu">
+            <li onclick="goToSlide(1)"><span>封面引入</span><span class="badge">第 01 页</span></li>
+            <li onclick="goToSlide(2)"><span>目录提要</span><span class="badge">第 02 页</span></li>
+            <li onclick="goToSlide(3)"><span>壹 · 时代之问</span><span class="badge">第 03 页</span></li>
+            <li onclick="goToSlide(9)"><span>贰 · 治党之策</span><span class="badge">第 09 页</span></li>
+            <li onclick="goToSlide(14)"><span>叁 · 回望长征</span><span class="badge">第 14 页</span></li>
+            <li onclick="goToSlide(21)"><span>肆 · 青春之行</span><span class="badge">第 21 页</span></li>
+            <li onclick="goToSlide(32)"><span>结语 · 走向新长征</span><span class="badge">第 32 页</span></li>
+        </ul>
+    </div>
+
+    <!-- AI 助教 -->
+    <button class="ai-fab" onclick="toggleAI()">
+        <span>🤖</span> 长征 AI 助教
+    </button>
+
+    <div class="ai-modal" id="aiModal">
+        <div class="ai-header">
+            <span>🚩 DeepSeek · 长征数字宣讲助手</span>
+            <button type="button" aria-label="关闭 AI 助教" onclick="toggleAI()" style="cursor:pointer;background:transparent;border:0;color:inherit;font:inherit">&times;</button>
+        </div>
+        <div class="ai-messages" id="aiMessages">
+            <div class="msg bot">
+                同学你好！我是由 DeepSeek 大模型驱动的长征数字助教。关于长征90年历史、党的二十届五中全会或新时代青年奋斗，随时提问！
+            </div>
+        </div>
+        <div class="ai-quick-prompts">
+            <div class="prompt-chip" onclick="askQuick(this)">长征胜利90周年有什么意义？</div>
+            <div class="prompt-chip" onclick="askQuick(this)">长征路上红军的平均年龄？</div>
+            <div class="prompt-chip" onclick="askQuick(this)">红军长征为什么能战胜千难万险？</div>
+        </div>
+        <div class="ai-input-area">
+            <input type="text" class="ai-input" id="aiInput" placeholder="向 DeepSeek 提问..." onkeydown="if(event.keyCode===13) sendMessage()">
+            <button class="ai-send-btn" onclick="sendMessage()">发送</button>
+        </div>
+    </div>
+
+    <!-- ===== 长征数字历史地图 V3.0 ===== -->
+    <div class="map-modal" id="mapModal" aria-hidden="true">
+
+        <header class="lc-header">
+            <div class="lc-brand">
+                <div class="lc-brand-mark">🚩</div>
+                <div>
+                    <h2>红军长征 · 历史足迹</h2>
+                    <p>THE LONG MARCH · DIGITAL HISTORY EXHIBITION</p>
+                </div>
+            </div>
+            <button class="lc-close" id="lcMapClose" type="button">✕ 返回主讲课件</button>
+        </header>
+
+        <main class="lc-layout">
+            <!-- 左侧历史时间轴 -->
+            <aside class="lc-panel lc-timeline-panel">
+                <div class="lc-section-label">HISTORICAL TIMELINE</div>
+                <div class="lc-section-title">长征历史时间轴</div>
+                <div class="lc-section-subtitle">选择历史节点，查看重要事件</div>
+                <div class="lc-timeline-list" id="lcTimelineList"></div>
+                <div class="lc-timeline-note">注：吴起镇为中央红军主力到达陕北的重要节点；会宁及将台堡会师作为长征胜利的补充史实单独展示。</div>
+            </aside>
+
+            <!-- 中央互动地图 -->
+            <section class="lc-map-panel">
+                <div class="lc-map-toolbar">
+                    <strong>中央红军长征路线示意图</strong>
+                    <div class="lc-map-toolbar-actions">
+                        <span>1934 — 1935 · ROUTE MAP</span>
+                        <button class="lc-camera-btn" id="lcCameraBtn" type="button">◎ 跟随行军</button>
+                    </div>
+                </div>
+
+                <div class="lc-map-canvas">
+                    <svg class="lc-map-svg" id="lcMapSvg" viewBox="0 0 1000 650" preserveAspectRatio="xMidYMid meet" role="img" aria-label="中央红军长征路线教学示意地图">
+                        <defs>
+                            <linearGradient id="lcPaper" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#f1ead9"/>
+                                <stop offset="100%" stop-color="#d8ccb0"/>
+                            </linearGradient>
+                            <linearGradient id="lcTerrain" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#d3c8a9"/>
+                                <stop offset="100%" stop-color="#aeb49a"/>
+                            </linearGradient>
+                            <pattern id="lcFineGrid" width="50" height="50" patternUnits="userSpaceOnUse">
+                                <path d="M50 0H0V50" fill="none" stroke="#92866b" stroke-width=".6" opacity=".17"/>
+                            </pattern>
+                            <filter id="lcRouteGlow" x="-30%" y="-30%" width="160%" height="160%">
+                                <feGaussianBlur stdDeviation="1.8" result="blur"/>
+                                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                            </filter>
+                            <clipPath id="lcRegionClip">
+                                <path d="M110 115 C210 45 335 55 420 80 C510 35 620 65 690 105 C790 85 900 150 920 240 C960 330 910 440 860 495 C790 575 680 590 580 570 C470 615 340 570 255 525 C150 480 95 370 105 275 C75 205 85 150 110 115Z"/>
+                            </clipPath>
+                        </defs>
+
+                        <rect width="1000" height="650" fill="url(#lcPaper)"/>
+                        <rect width="1000" height="650" fill="url(#lcFineGrid)"/>
+                        <path d="M110 115 C210 45 335 55 420 80 C510 35 620 65 690 105 C790 85 900 150 920 240 C960 330 910 440 860 495 C790 575 680 590 580 570 C470 615 340 570 255 525 C150 480 95 370 105 275 C75 205 85 150 110 115Z" fill="#e1d8c3" stroke="#b5a88a" stroke-width="2"/>
+
+                        <g clip-path="url(#lcRegionClip)">
+                            <path d="M260 110 L480 95 L550 190 L510 315 L365 335 L275 250Z" fill="#d0c7ac"/>
+                            <path d="M390 45 L610 55 L650 140 L540 205 L445 145Z" fill="#d8d0b9"/>
+                            <path d="M610 95 L790 120 L800 270 L680 310 L590 205Z" fill="#d5ccb4"/>
+                            <path d="M470 305 L615 310 L650 420 L535 465 L430 410Z" fill="#c9c9ad"/>
+                            <path d="M230 335 L430 335 L460 510 L310 550 L220 455Z" fill="#c6c6a9"/>
+                            <path d="M620 300 L770 300 L800 430 L690 470 L610 410Z" fill="#d5c9aa"/>
+                            <path d="M770 330 L900 355 L905 500 L800 540 L740 445Z" fill="#d4c7aa"/>
+                            <path d="M570 445 L760 440 L785 550 L640 590 L540 520Z" fill="#d4cbb0"/>
+
+                            <g fill="none" stroke="#a99c7d" stroke-width="1" opacity=".42">
+                                <path d="M150 180 Q280 100 400 160 T650 130"/>
+                                <path d="M130 220 Q270 145 410 195 T690 165"/>
+                                <path d="M170 270 Q300 190 440 245 T740 220"/>
+                                <path d="M180 320 Q320 245 470 300 T790 280"/>
+                                <path d="M190 380 Q350 300 500 365 T850 350"/>
+                                <path d="M220 440 Q360 370 510 420 T850 425"/>
+                                <path d="M260 490 Q410 420 560 480 T820 500"/>
+                                <path d="M320 530 Q450 470 600 530 T790 545"/>
+                                <path d="M300 120 Q350 90 410 120"/>
+                                <path d="M330 145 Q390 110 450 145"/>
+                                <path d="M430 190 Q490 155 550 190"/>
+                            </g>
+                            <g fill="none" stroke="#9c9279" stroke-width="1.4" stroke-dasharray="5 5" opacity=".8">
+                                <path d="M490 95 Q470 210 510 315"/>
+                                <path d="M620 105 Q600 220 650 310"/>
+                                <path d="M610 310 Q570 405 610 500"/>
+                                <path d="M430 330 Q420 425 460 520"/>
+                                <path d="M770 310 Q730 410 780 530"/>
+                            </g>
+                            <!-- 川西北山脉与雪山示意 -->
+                            <g fill="url(#lcTerrain)" stroke="#a29476" stroke-width="1.4" opacity=".92">
+                                <path d="M245 215 L280 155 L310 205 L340 130 L375 205 L405 150 L445 230 L470 250 L400 270 L320 260Z"/>
+                                <path d="M280 155 L295 185 L280 177 L265 185Z" fill="#f4efdf"/>
+                                <path d="M340 130 L355 166 L340 155 L325 166Z" fill="#f4efdf"/>
+                                <path d="M405 150 L420 185 L405 173 L390 185Z" fill="#f4efdf"/>
+                            </g>
+                            <path d="M405 145 Q480 120 550 165 Q575 215 515 240 Q435 225 405 145Z" fill="#b9c3a0" opacity=".55"/>
+                        </g>
+
+                        <!-- 地区名称 -->
+                        <g fill="#827b67" font-size="20" font-family="Microsoft YaHei" opacity=".88">
+                            <text x="340" y="300">四川</text>
+                            <text x="500" y="400">贵州</text>
+                            <text x="290" y="475">云南</text>
+                            <text x="685" y="405">湖南</text>
+                            <text x="825" y="480">江西</text>
+                            <text x="655" y="525">广西</text>
+                            <text x="475" y="95">甘肃</text>
+                            <text x="720" y="200">陕西</text>
+                        </g>
+
+                        <!-- 河流示意 -->
+                        <g fill="none" stroke="#739b9d" stroke-linecap="round" opacity=".9">
+                            <path d="M840 520 Q785 470 735 420 T700 380" stroke-width="4"/>
+                            <path d="M650 350 Q600 330 550 345 T490 365" stroke-width="3"/>
+                            <path d="M410 205 Q450 235 455 270 Q455 305 420 325" stroke-width="3"/>
+                            <path d="M245 300 Q300 280 350 275 T440 300" stroke-width="4"/>
+                            <path d="M295 140 Q320 180 330 210 T360 245" stroke-width="3"/>
+                        </g>
+                        <g fill="#587e80" font-size="13" font-family="Microsoft YaHei">
+                            <text x="745" y="430">湘江</text>
+                            <text x="555" y="320">乌江</text>
+                            <text x="430" y="315">赤水河</text>
+                            <text x="290" y="290">金沙江</text>
+                            <text x="285" y="175">大渡河</text>
+                        </g>
+                        <g fill="#77745f" font-size="12" font-family="Microsoft YaHei">
+                            <text x="350" y="190">夹金山</text>
+                            <text x="445" y="180">雪山地区</text>
+                            <text x="490" y="220">草地地区</text>
+                        </g>
+
+                        <!-- 中央红军长征路线：教学示意，不按精确地理比例绘制 -->
+                        <path id="lcMarchPath" d="M825 510 C790 490 760 465 725 440 C690 420 650 400 620 380 C590 365 560 340 540 315 C520 295 505 275 520 255 C540 230 580 240 580 265 C580 290 545 305 520 285 C495 265 485 235 510 215 C535 195 570 205 570 230 C570 250 540 260 520 240 C500 220 485 195 470 175 C455 155 440 135 420 115 C410 100 400 85 390 70 C430 75 465 90 500 105 C540 120 585 105 635 85" fill="none" stroke="#ad6659" stroke-width="3" stroke-dasharray="7 8" stroke-linecap="round" opacity=".72"/>
+                        <path id="lcTrail" d="" fill="none" stroke="#b63832" stroke-width="5" stroke-linecap="round" filter="url(#lcRouteGlow)"/>
+
+                        <!-- 独立历史地标：大渡河 -->
+                        <g transform="translate(342 225)" pointer-events="none">
+                            <circle r="5" fill="#fff8e8" stroke="#9d473e" stroke-width="2"/>
+                            <path d="M-5 -5 L-55 -35" fill="none" stroke="#927c60" stroke-width="1.2"/>
+                            <text x="-118" y="-39" fill="#843d35" font-size="12" font-weight="bold">强渡大渡河</text>
+                        </g>
+
+                        <!-- 会宁会师：独立于中央红军到达吴起镇的路线节点 -->
+                        <g id="lcHuiningNode" class="lc-special-node" transform="translate(760 145)" tabindex="0" role="button" aria-label="查看会宁三军会师历史档案">
+                            <path d="M0 -14 L4 -4 L14 0 L4 4 L0 14 L-4 4 L-14 0 L-4 -4Z" fill="#b78b48" stroke="#fff5df" stroke-width="2"/>
+                            <text x="21" y="-3" fill="#745a35" font-size="14" font-weight="bold">会宁</text>
+                            <text x="21" y="14" fill="#85785e" font-size="10">1936.10 · 三大主力会师</text>
+                        </g>
+
+                        <g id="lcStations"></g>
+
+                        <!-- 红军当前位置标记 -->
+                        <g id="lcTroop" class="lc-troop">
+                            <circle cx="0" cy="0" r="17" fill="#fff8e8" stroke="#b63832" stroke-width="3"/>
+                            <circle cx="0" cy="0" r="7" fill="#b63832"/>
+                            <path d="M0 -15 L0 -43" stroke="#78312b" stroke-width="3"/>
+                            <path d="M1 -42 L25 -36 L1 -30Z" fill="#b63832"/>
+                        </g>
+
+                        <!-- 指北针 -->
+                        <g transform="translate(930 78)">
+                            <path d="M0 -24 L9 7 L0 2 L-9 7Z" fill="#8f483c"/>
+                            <text x="0" y="-32" text-anchor="middle" fill="#6b624e" font-size="14" font-weight="bold">N</text>
+                        </g>
+                    </svg>
+                    <div class="lc-map-note">历史路线教学示意图，非精确 GIS 测绘；会宁会师作为独立补充史实展示。</div>
+                </div>
+
+                <div class="lc-map-legend">
+                    <div class="lc-legend-item"><span class="lc-legend-line"></span>中央红军行军路线</div>
+                    <div class="lc-legend-item"><span class="lc-legend-dot"></span>历史事件地标</div>
+                    <div class="lc-legend-item"><span class="lc-legend-star">✦</span>会宁三军会师（补充史实）</div>
+                    <div class="lc-legend-item">🚩 红军当前位置</div>
+                </div>
+
+                <div class="lc-playback">
+                    <div class="lc-playback-top">
+                        <div class="lc-playback-info"><strong id="lcCurrentMiles">0</strong><span>/ 25,000 里（示意进度）</span></div>
+                        <div class="lc-controls">
+                            <button class="lc-control-btn primary" id="lcPlayBtn" type="button">▶ 开始行军</button>
+                            <button class="lc-control-btn" id="lcRestartBtn" type="button">↻ 重播</button>
+                            <button class="lc-control-btn" id="lcSpeedBtn" type="button">速度 1×</button>
+                        </div>
+                    </div>
+                    <input class="lc-progress" id="lcProgress" type="range" min="0" max="1000" value="0" aria-label="行军进度"/>
+                    <div class="lc-progress-bottom"><span>于都 · 出发</span><span id="lcProgressPercent">0%</span><span>吴起镇 · 到达陕北</span></div>
+                </div>
+            </section>
+
+            <!-- 右侧历史档案卡片 -->
+            <aside class="lc-panel lc-event-panel">
+                <div class="lc-event-top">
+                    <span class="lc-event-tag" id="lcEventTag">伟大远征 · 启程</span>
+                    <span class="lc-event-index" id="lcEventIndex">01 / 08</span>
+                </div>
+                <div class="lc-event-date" id="lcEventDate">1934年10月</div>
+                <h2 class="lc-event-title" id="lcEventTitle">于都 · 集结出发</h2>
+                <div class="lc-event-divider"></div>
+                <figure class="lc-event-figure" id="lcEventFigure" tabindex="0" role="button" aria-label="打开历史影像展厅">
+                    <img id="lcEventImage" class="lc-event-image" alt="" hidden/>
+                    <div id="lcImageFallback" class="lc-image-fallback">
+                        <span class="lc-image-icon">▧</span>
+                        <strong>历史影像展示区</strong>
+                        <small>图片暂时无法加载，请检查网络或打开资料来源</small>
+                    </div>
+                    <figcaption id="lcEventCaption">历史资料图片 · 点击查看大图</figcaption>
+                </figure>
+                <div class="lc-event-desc" id="lcEventDesc">中央红军主力从于都等地出发，开始战略转移。</div>
+                <button class="lc-archive-open-btn" id="lcArchiveBtn" type="button">▤ 查看完整历史档案 →</button>
+                <div class="lc-event-spirit" id="lcEventSpirit"><strong>HISTORICAL SPIRIT · 精神传承</strong>坚定理想信念，迈出新时代青年奋进的第一步！</div>
+            </aside>
+        </main>
+
+        <footer class="lc-footer">RED ARMY LONG MARCH · DIGITAL HISTORY EXHIBITION</footer>
+
+        <!-- 全屏历史影像展厅 -->
+        <div class="lc-viewer" id="lcArchiveViewer" aria-hidden="true">
+            <div class="lc-viewer-backdrop" id="lcViewerBackdrop"></div>
+            <section class="lc-viewer-window" role="dialog" aria-modal="true" aria-labelledby="lcViewerTitle">
+                <header class="lc-viewer-header">
+                    <div>
+                        <div class="lc-viewer-eyebrow">DIGITAL HISTORICAL ARCHIVE</div>
+                        <div class="lc-viewer-heading">长征历史影像 · 数字档案馆</div>
+                    </div>
+                    <button class="lc-viewer-close" id="lcViewerClose" type="button" aria-label="关闭历史档案">✕</button>
+                </header>
+                <div class="lc-viewer-content">
+                    <div class="lc-viewer-visual">
+                        <div class="lc-viewer-photo">
+                            <img id="lcViewerImage" alt="" hidden/>
+                            <div class="lc-viewer-fallback" id="lcViewerFallback"><span>▧</span><strong>历史影像资料</strong><small>图片暂时无法加载，可打开对应资料来源</small></div>
+                            <button class="lc-viewer-arrow prev" id="lcViewerPrev" type="button" aria-label="上一事件">‹</button>
+                            <button class="lc-viewer-arrow next" id="lcViewerNext" type="button" aria-label="下一事件">›</button>
+                        </div>
+                        <div class="lc-viewer-photo-caption" id="lcViewerCaption">历史影像资料</div>
+                        <div class="lc-viewer-counter" id="lcViewerCounter">01 / 09</div>
+                    </div>
+                    <article class="lc-viewer-article">
+                        <div class="lc-viewer-tag" id="lcViewerTag">历史事件档案</div>
+                        <div class="lc-viewer-date" id="lcViewerDate">1934年10月</div>
+                        <h2 id="lcViewerTitle">于都 · 集结出发</h2>
+                        <p class="lc-viewer-lead" id="lcViewerLead"></p>
+                        <div class="lc-archive-section"><h3>01 / 历史背景</h3><p id="lcViewerBackground"></p></div>
+                        <div class="lc-archive-section"><h3>02 / 事件经过</h3><p id="lcViewerProcess"></p></div>
+                        <div class="lc-archive-section"><h3>03 / 历史意义</h3><p id="lcViewerMeaning"></p></div>
+                        <div class="lc-viewer-spirit"><span>精神传承</span><p id="lcViewerSpirit"></p></div>
+                        <a class="lc-viewer-source" id="lcViewerSource" href="#" target="_blank" rel="noopener noreferrer">资料来源：待补充核实</a>
+                    </article>
+                </div>
+                <footer class="lc-viewer-footer">
+                    <button id="lcViewerPrevBottom" type="button">← 上一个历史事件</button>
+                    <span>红军长征 · 历史足迹</span>
+                    <button id="lcViewerNextBottom" type="button">下一个历史事件 →</button>
+                </footer>
+            </section>
+        </div>
+    </div>
+
+    <!-- 课件原底板 -->
+    <button type="button" id="exhibit-fullscreen">全屏</button>
+    <div id="exhibit-fullscreen-status" role="status"></div>
+    <div class="exhibit-page-controls">
+        <div class="page-counter" id="counter" aria-live="polite">01 / 32</div>
+        <button class="exhibit-thumbnails-toggle" id="exhibit-thumbnails-toggle" type="button" aria-controls="exhibit-thumbnails" aria-expanded="false" hidden>展开缩略图</button>
+    </div>
+    <div class="tips">提示：键盘 ← → 翻页 | 顶部进入【动态长征沙盘】 | 右下角有【AI助教】</div>
+
+    <div class="swiper mySwiper">
+        <div class="swiper-wrapper" id="slide-container"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+
+    <button type="button" id="exhibit-read-button" class="exhibit-read-button" aria-haspopup="dialog" hidden>放大阅读</button>
+    <dialog id="exhibit-reader" class="exhibit-reader" aria-labelledby="exhibit-reader-title">
+        <div class="exhibit-reader-toolbar">
+            <h2 id="exhibit-reader-title">放大阅读</h2>
+            <div><button type="button" data-reset-reader>还原</button><button type="button" data-close-reader>退出放大</button></div>
+        </div>
+        <div class="exhibit-reader-viewport"><img alt="" draggable="false"></div>
+    </dialog>
+    <nav class="exhibit-thumbnails" id="exhibit-thumbnails" aria-label="课件缩略图" hidden></nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        const totalSlides = 32;
+        const container = document.getElementById('slide-container');
+
+        for (let i = 1; i <= totalSlides; i++) {
+            let pageNum = String(i).padStart(2, '0');
+            let fileName = `大学生讲思政课 (2)_${pageNum}.png`;
+            const slide = document.createElement('div');
+            slide.className = 'swiper-slide';
+            slide.innerHTML = `<img src="${fileName}" alt="第${pageNum}页" onerror="handleImgError(this, '${pageNum}')">`;
+            container.appendChild(slide);
+        }
+
+        function handleImgError(img, pageNum) {
+            if (!img.dataset.tried) {
+                img.dataset.tried = "true";
+                img.src = `大学生讲思政课(2)_${pageNum}.png`;
+            }
+        }
+
+        const swiper = new Swiper(".mySwiper", {
+            keyboard: { enabled: true },
+            mousewheel: true,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            on: {
+                slideChange: function () {
+                    let current = String(this.activeIndex + 1).padStart(2, '0');
+                    document.getElementById('counter').innerText = `${current} / ${totalSlides}`;
+                }
+            }
+        });
+
+        function toggleDrawer() {
+            document.getElementById('drawer').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        function goToSlide(pageNumber) {
+            swiper.slideTo(pageNumber - 1, 600);
+            toggleDrawer();
+        }
+
+        function toggleAI() {
+            document.getElementById('aiModal').classList.toggle('active');
+        }
+
+        function askQuick(el) {
+            document.getElementById('aiInput').value = el.innerText;
+            sendMessage();
+        }
+
+        /* ====== DeepSeek AI 助教 ====== */
+        const DEEPSEEK_API_KEY = atob("c2stNWEyMmU0NThmOWZlNDUyMTgzZmViNDQ2ZGVjM2UzNjM=");
+        let chatHistory = [
+            {
+                role: "system",
+                content: "你是广东财贸职业学院大学生讲思政课团队专属的‘长征数字化宣讲AI助手’。当前主题是‘长征胜利90周年’与‘党的二十届五中全会精神’。你的回答应政治坚定、富有青年活力、语言铿锵有力。回答请控制在100~180字以内，重点突出。"
+            }
+        ];
+
+        async function sendMessage() {
+            const input = document.getElementById('aiInput');
+            const query = input.value.trim();
+            if (!query) return;
+
+            const msgBox = document.getElementById('aiMessages');
+            if (DEEPSEEK_API_KEY === "请填入新生成的 DeepSeek API Key") {
+                msgBox.innerHTML += `<div class="msg bot">AI 助教尚未配置新的 API Key。请先在代码中填写新密钥；原密钥已经出现在前端代码中，建议先撤销旧密钥。</div>`;
+                msgBox.scrollTop = msgBox.scrollHeight;
+                input.value = "";
+                return;
+            }
+            msgBox.innerHTML += `<div class="msg user">${query}</div>`;
+            input.value = "";
+            msgBox.scrollTop = msgBox.scrollHeight;
+
+            const loadingId = 'loading-' + Date.now();
+            msgBox.innerHTML += `<div class="msg bot" id="${loadingId}">🚩 DeepSeek 正在组织思政观点...</div>`;
+            msgBox.scrollTop = msgBox.scrollHeight;
+
+            chatHistory.push({ role: "user", content: query });
+
+            try {
+                const response = await fetch("https://api.deepseek.com/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${DEEPSEEK_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek-chat",
+                        messages: chatHistory,
+                        max_tokens: 300,
+                        temperature: 0.7
+                    })
+                });
+
+                if (!response.ok) throw new Error("API request error");
+                const data = await response.json();
+                const aiReply = data.choices[0].message.content;
+                chatHistory.push({ role: "assistant", content: aiReply });
+
+                const loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.innerText = aiReply;
+            } catch (error) {
+                const loadingEl = document.getElementById(loadingId);
+                if (loadingEl) {
+                    loadingEl.innerText = "【长征精神】伟大长征精神是中国共产党人革命风范的生动反映。新时代青年要赓续红色血脉，走好新一代人的长征路！";
+                }
+            }
+            msgBox.scrollTop = msgBox.scrollHeight;
+        }
+
+        /* ==========================================
+           长征数字历史地图 V3.0
+           独立控制器：不影响课件、导航和 AI 助教
+        ========================================== */
+        (() => {
+            const $ = id => document.getElementById(id);
+            const mapModal = $('mapModal');
+            const pathEl = $('lcMarchPath');
+            const trailEl = $('lcTrail');
+            const troopEl = $('lcTroop');
+            const stationsEl = $('lcStations');
+            const timelineEl = $('lcTimelineList');
+            const progressEl = $('lcProgress');
+            const playBtn = $('lcPlayBtn');
+            const restartBtn = $('lcRestartBtn');
+            const speedBtn = $('lcSpeedBtn');
+            const mapSvg = $('lcMapSvg');
+            const cameraBtn = $('lcCameraBtn');
+            const viewer = $('lcArchiveViewer');
+
+            const SVG_NS = 'http://www.w3.org/2000/svg';
+
+            // 八个中央红军长征历史节点。路线坐标为教学展示示意，不是精确 GIS 轨迹。
+            const stations = [
+                {
+                    t: 0.000, name: '于都出发', tag: '伟大远征 · 启程', title: '于都 · 集结出发', date: '1934年10月', miles: '0 里',
+                    desc: '1934年10月中旬，中共中央、中革军委率中央红军从于都等地渡河，踏上战略转移征程。',
+                    spirit: '坚定理想信念，迈出新时代青年奋进的第一步！',
+                    image: 'https://p2.img.cctvpic.com/photoworkspace/contentimg/2021/08/23/2021082307212211076.jpg', imageAlt: '于都县长征出发纪念碑实景，中央红军长征出发地；图片为纪念地现状，不是1934年现场照片。', imageCaption: '于都长征出发纪念碑实景 · 共产党员网/CCTV图片库', imageType: '实景/资料图片', source: '图片来源：江西日报《长征路上再出发》（于都纪念馆实景）', sourceUrl: 'https://www.jxcn.cn/system/2023/03/06/019972832.shtml',
+                    imageFallbacks: ['https://www.mod.gov.cn/gfbw/gfjy_index/zyhd/4881631.html'], lead: '中央红军战略转移的历史起点。',
+                    background: '第五次反“围剿”失利后，中央红军面临严峻的军事形势，需要进行战略转移。',
+                    process: '1934年10月中旬，中共中央、中革军委率中央红军从于都等地渡河，开始长征。',
+                    meaning: '中央红军由此踏上战略转移征程，开启了伟大的长征历史。',
+                    source: '图片来源：江西日报《长征路上再出发》（于都中央红军长征出发纪念馆实景）',
+                    labelDx: 0, labelDy: 29, anchor: 'middle'
+                },
+                {
+                    t: 0.125, name: '血战湘江', tag: '生死博弈 · 突围', title: '湘江战役 · 英雄史诗', date: '1934年11月', miles: '约3,100里',
+                    desc: '红军在湘江一带突破国民党军设置的封锁线，付出了重大牺牲。湘江战役是中央红军长征初期极为惨烈的战役之一。',
+                    spirit: '不畏艰难困苦、忠诚于理想信念的革命品格！',
+                    image: 'https://www.gxjjw.gov.cn/data/images/uploadpic/2015/02/27/f10533b81fbdf22ae4ce7f6983162a47.jpg', imageAlt: '红军长征湘江战役纪念馆内场景复原展陈；不是1934年战役现场照片。', imageCaption: '湘江战役纪念馆场景复原展陈 · 广西纪检监察网', imageType: '实景/资料图片', source: '图片来源：江西日报《长征路上再出发》（湘江战役纪念馆实景）', sourceUrl: 'https://www.jxcn.cn/system/2023/03/06/019972832.shtml',
+                    imageFallbacks: ['https://www.redtourism.com.cn/hstt/pic/2024-02/29/157100_t1_0X0X600X338_0b58294d-ef37-47e1-bdc5-fc2ccffdb293.jpeg'], lead: '中央红军长征初期的重要战役。',
+                    background: '国民党军队在湘江一带设置封锁线，企图阻止中央红军继续西进。',
+                    process: '1934年11月，红军将士浴血奋战，突破湘江封锁线。',
+                    meaning: '湘江战役是长征途中极为惨烈的战役之一，红军付出了重大牺牲。',
+                    source: '图片来源：江西日报《长征路上再出发》（红军长征湘江战役纪念馆实景，图片由纪念馆提供）',
+                    labelDx: -6, labelDy: 28, anchor: 'middle'
+                },
+                {
+                    t: 0.255, name: '遵义会议', tag: '生死攸关 · 历史转折', title: '遵义会议 · 走向成熟', date: '1935年1月', miles: '约6,400里',
+                    desc: '1935年1月，中共中央在贵州遵义召开政治局扩大会议，集中解决当时具有决定意义的军事和组织问题。',
+                    spirit: '坚持真理、实事求是、独立自主的精神！',
+                    image: 'https://p5.img.cctvpic.com/photoworkspace/contentimg/2021/09/26/2021092614345425356.jpg', imageAlt: '遵义会议会址建筑实景；为纪念地现状，不是会议历史现场照片。', imageCaption: '遵义会议会址实景 · 共产党员网/CCTV图片库', imageType: '实景/资料图片', source: '图片来源：新华网《遵义会议会址保护性修缮基本完成》（2026-09-29）', sourceUrl: 'https://www.xinhuanet.com/culture/20260929/1aaf32542ec54a379dd5f5ec4ffdff08/c.html',
+                    imageFallbacks: [], lead: '中国共产党历史上生死攸关的转折点。',
+                    background: '长征初期军事行动受挫，党和红军面临严峻的生存危机。',
+                    process: '1935年1月，中共中央在贵州遵义召开政治局扩大会议。',
+                    meaning: '遵义会议集中解决了当时具有决定意义的军事和组织问题，开启了中国革命新的历史局面。',
+                    source: '图片来源：新华网《遵义会议会址保护性修缮基本完成》（2026-09-29，会址实景）',
+                    labelDx: -10, labelDy: -19, anchor: 'end'
+                },
+                {
+                    t: 0.435, name: '四渡赤水', tag: '出奇制胜 · 军事智慧', title: '四渡赤水 · 军事传奇', date: '1935年1—3月', miles: '约10,900里',
+                    desc: '中央红军在赤水河流域灵活机动地穿插作战，调动和迷惑敌军，摆脱被动局面，掌握战略主动。',
+                    spirit: '敢于斗争、善于斗争，展现卓越的战略智慧！',
+                    image: 'https://17163841.s21i.faiusr.com/2/ABUIABACGAAgnPeY3AUotLiWngQw7gU4uQQ.jpg', imageAlt: '四渡赤水纪念馆建筑实景；为纪念馆现状，不是1935年战役现场照片。', imageCaption: '四渡赤水纪念馆实景 · 纪念馆图片', imageType: '实景/资料图片', source: '图片来源：中国民族报《四渡赤水纪念馆：纪念赤水河畔的“得意之笔”》（2026-10-23）', sourceUrl: 'https://www.neac.gov.cn/seac/xwzx/202610/1196184.shtml',
+                    imageFallbacks: [], lead: '展现红军灵活机动战略战术的重要战役。',
+                    background: '中央红军在川黔滇边境地区受到国民党军队围追堵截。',
+                    process: '1935年1月至3月，中央红军在赤水河流域多次渡河，灵活调动敌军。',
+                    meaning: '四渡赤水体现了红军灵活机动的战略战术，成为长征中的著名军事行动。',
+                    source: '图片来源：中国民族报《四渡赤水纪念馆：纪念赤水河畔的“得意之笔”》（2026-10-23，纪念馆外景）',
+                    labelDx: 15, labelDy: 26, anchor: 'start'
+                },
+                {
+                    t: 0.585, name: '巧渡金沙江', tag: '神兵天降 · 突破天险', title: '金沙江 · 跳出包围圈', date: '1935年5月', miles: '约14,600里',
+                    desc: '中央红军通过周密部署渡过金沙江，摆脱国民党军队的围追堵截，实现战略转移中的重要突破。',
+                    spirit: '临危不乱、沉着坚毅的战略定力！',
+                    image: 'https://imgs.xinhuanet.com/20260503/ca00c02b8ee8409998cab6a1e6f18732/20260503ca00c02b8ee8409998cab6a1e6f18732_7fb3508ced694acf9c63d611c0b7cfd2.jpg', imageAlt: '四川会理红军巧渡金沙江纪念碑实景，2026年4月28日拍摄，新华社记者鲍菲菲摄', imageCaption: '巧渡金沙江纪念碑实景 · 新华社/鲍菲菲摄', imageType: '实景/资料图片', source: '图片来源：新华社《从太空看中国：卫星视角下的“金沙水拍云崖暖”》（2026-05-03）', sourceUrl: 'https://imgs.xinhuanet.com/20260503/ca00c02b8ee8409998cab6a1e6f18732/c.html',
+                    imageFallbacks: [], lead: '红军摆脱敌军围追堵截的重要行动。',
+                    background: '中央红军继续向西北方向转移，需要突破金沙江天险。',
+                    process: '1935年5月，中央红军通过周密部署，顺利渡过金沙江。',
+                    meaning: '红军成功跳出了敌军重兵包围，为继续北上创造了有利条件。',
+                    source: '图片来源：新华网《探访皎平渡 瞰“金沙水拍云崖暖”》（2026-05-03，巧渡金沙江纪念碑）',
+                    labelDx: -12, labelDy: 28, anchor: 'end'
+                },
+                {
+                    t: 0.735, name: '飞夺泸定桥', tag: '极限英雄 · 英勇奋战', title: '飞夺泸定桥 · 铁索寒', date: '1935年5月', miles: '约18,400里',
+                    desc: '1935年5月，红军夺取泸定桥，突破大渡河天险，为继续北上打开通道。',
+                    spirit: '勇往直前、不怕牺牲的革命英雄气概！',
+                    image: 'https://kscgc.sctv.com/sctv/1/image/public/202105/20210529101516_vabl5cr17t.jpg', imageAlt: '泸定桥现状实景；展示的是历史遗址，不是1935年飞夺泸定桥现场照片。', imageCaption: '泸定桥实景 · 四川网络广播电视台', imageType: '实景/资料图片', source: '图片来源：新华网《从太空看中国丨红军长征在川足迹——泸定桥的红绿交响》（含1981年泸定桥照片）', sourceUrl: 'https://www.xinhuanet.com/photo/20260529/05a56f5ca3234f5da5540490b1347bbb/c.html',
+                    imageFallbacks: [], lead: '红军突破大渡河天险的重要历史事件。',
+                    background: '红军北上途中需要通过大渡河，泸定桥成为重要的交通和军事要点。',
+                    process: '1935年5月，红军飞夺泸定桥，打开了继续北上的通道。',
+                    meaning: '飞夺泸定桥体现了红军英勇顽强、不怕牺牲的革命精神。',
+                    source: '图片来源：新华网《泸定桥的红绿交响》（1981年泸定桥历史照片，新华社记者袁克忠摄）',
+                    labelDx: 14, labelDy: -17, anchor: 'start'
+                },
+                {
+                    t: 0.865, name: '雪山草地', tag: '生死考验 · 信念成钢', title: '翻雪山过草地', date: '1935年夏季', miles: '约21,600里',
+                    desc: '红军翻越雪山、穿过草地，克服严寒、饥饿、疾病和复杂自然环境等困难，继续坚持北上。',
+                    spirit: '顾全大局、严守纪律、艰苦奋斗的革命乐观主义！',
+                    image: 'https://n.sinaimg.cn/translate/20161011/uboQ-fxwrhpq6323942.jpg', imageAlt: '红军翻越夹金山的历史资料照片；图片内容为雪山行军资料影像。', imageCaption: '夹金山长征资料照片 · 新浪新闻转载资料图', imageType: '实景/资料图片', source: '图片来源：新华网《中央红军长征第一次翻越大雪山——夹金山》（2017-08-04）', sourceUrl: 'https://www.xinhuanet.com/politics/2017-08/04/c_1121433894.htm',
+                    imageFallbacks: [], lead: '长征途中极为艰苦的自然环境考验。',
+                    background: '红军进入川西北地区后，面临高寒山区和复杂草地环境。',
+                    process: '红军翻越雪山、穿过草地，克服严寒、饥饿和疾病等困难。',
+                    meaning: '这段历程体现了红军坚定的理想信念和顽强的革命意志。',
+                    source: '图片来源：新华网《中央红军长征第一次翻越大雪山——夹金山》（新华社资料照片）',
+                    labelDx: -12, labelDy: -18, anchor: 'end'
+                },
+                {
+                    t: 1.000, name: '吴起镇', tag: '抵达陕北 · 战略转移', title: '吴起镇 · 抵达陕北', date: '1935年10月', miles: '约25,000里',
+                    desc: '1935年10月，中央红军主力到达陕北吴起镇，与陕北红军会合，中央红军主力的长征取得重要阶段性胜利。',
+                    spirit: '团结奋斗、开辟未来，走好新时代的长征路！',
+                    image: 'https://www.huining.gov.cn/upfiles/image/20211012/1634008945405237.jpg', imageAlt: '甘肃会宁红军三大主力会师纪念塔实景，王鹏程摄', imageCaption: '红军三大主力会师纪念塔实景 · 王鹏程摄', imageType: '实景/资料图片', source: '图片来源：会宁县人民政府《会师精神激励革命老区蜕变》（2021-10-12）', sourceUrl: 'https://www.huining.gov.cn/xwzx/mtjj/art/2021/art_4caadaf68f414eb986455c62862e6ec6.html',
+                    imageFallbacks: [], lead: '中央红军主力抵达陕北的重要历史节点。',
+                    background: '经过长途跋涉，中央红军主力逐步进入陕北地区。',
+                    process: '1935年10月19日，中央红军陕甘支队到达陕北吴起镇，与陕北红军会合。',
+                    meaning: '中央红军主力到达陕北，标志着其长征中的重要战略转移阶段取得胜利。1936年红军三大主力会师则是长征胜利结束的标志。',
+                    source: '图片来源：新华网《万里长征落脚处 胜利会师在吴起》（2026-10-07，纪念碑实景）',
+                    labelDx: -12, labelDy: -18, anchor: 'end'
+                }
+            ];
+
+            // 独立补充档案：1936年三大主力会师，不与吴起镇合并
+            const huiningRecord = {
+                name: '会宁会师', tag: '长征胜利 · 三军会师', title: '会宁 · 三大主力胜利会师', date: '1936年10月', miles: '补充历史节点',
+                desc: '1936年10月，红军各路主力在甘肃会宁、宁夏将台堡等地胜利会师，标志着红军长征胜利结束。',
+                spirit: '团结奋斗、顾全大局、坚定理想信念，走好新时代的长征路！',
+                image: 'https://www.huining.gov.cn/cms_files/filemanager/1967375158/picture/20262/04a15e7fb23249e68acd761ea5ad88a6.png', imageAlt: '甘肃会宁红军会师纪念塔实景；为纪念设施现状，不是1936年会师现场照片。', imageCaption: '会宁红军会师纪念塔实景 · 会宁县人民政府', imageType: '实景/资料图片', source: '图片来源：新华网《甘肃会宁：红军会师 中国安宁》（2016-07-25）', sourceUrl: 'https://www.xinhuanet.com/politics/2016-07/25/c_129174163.htm',
+                imageFallbacks: [], lead: '红军三大主力胜利会师，标志着长征胜利结束。',
+                background: '红军各路主力经过长期艰苦转战，逐步实现战略汇合。',
+                process: '1936年10月9日，红一、红四方面军在甘肃会宁会师；10月22日，红二方面军在将台堡地区与红一方面军会师。',
+                meaning: '红一、红二、红四方面军在会宁和将台堡地区会师，标志着红军长征胜利结束。',
+                source: '图片来源：新华网《甘肃会宁：红军会师 中国安宁》（会宁会师纪念塔实景）'
+            };
+            const archiveRecords = [...stations, huiningRecord];
+
+            let pathLength = 0;
+            let progress = 0;
+            let isPlaying = false;
+            let animationId = null;
+            let lastTimestamp = 0;
+            let activeIndex = -1;
+            let speedIndex = 0;
+            const speeds = [1, 1.5, 2];
+            let speed = speeds[0];
+            let followCamera = false;
+            let imageRequestToken = 0;
+            let viewerIndex = 0;
+
+            function createSvgElement(tag, attributes = {}) {
+                const element = document.createElementNS(SVG_NS, tag);
+                Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+                return element;
+            }
+
+            function buildTimeline() {
+                timelineEl.innerHTML = '';
+                archiveRecords.forEach((record, index) => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'lc-timeline-item' + (index === 8 ? ' special' : '');
+                    const number = document.createElement('span');
+                    number.className = 'lc-time-num';
+                    number.textContent = String(index + 1).padStart(2, '0');
+                    const copy = document.createElement('span');
+                    copy.className = 'lc-time-copy';
+                    const title = document.createElement('strong');
+                    title.textContent = index === 8 ? '会宁三军会师' : record.name;
+                    const date = document.createElement('small');
+                    date.textContent = record.date;
+                    copy.append(title, date);
+                    button.append(number, copy);
+                    button.addEventListener('click', () => index === 8 ? showHuiningEvent() : jumpToStation(index));
+                    timelineEl.appendChild(button);
+                });
+            }
+
+            function buildMapNodes() {
+                stationsEl.innerHTML = '';
+                stations.forEach((station, index) => {
+                    const point = pathEl.getPointAtLength(station.t * pathLength);
+                    const group = createSvgElement('g', {
+                        class: 'lc-map-node',
+                        transform: `translate(${point.x}, ${point.y})`,
+                        tabindex: '0', role: 'button', 'aria-label': station.name
+                    });
+                    const circle = createSvgElement('circle', { class: 'lc-node-dot', cx: 0, cy: 0, r: 8 });
+                    const label = createSvgElement('text', {
+                        class: 'lc-node-label',
+                        x: station.labelDx ?? 12,
+                        y: station.labelDy ?? -16,
+                        'text-anchor': station.anchor || 'start'
+                    });
+                    label.textContent = station.name;
+                    group.append(circle, label);
+                    group.addEventListener('click', () => jumpToStation(index));
+                    group.addEventListener('keydown', event => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            jumpToStation(index);
+                        }
+                    });
+                    stationsEl.appendChild(group);
+                });
+            }
+
+            function setEventImage(record) {
+                const img = $('lcEventImage');
+                const fallback = $('lcImageFallback');
+                const caption = $('lcEventCaption');
+                const token = ++imageRequestToken;
+                img.hidden = true;
+                fallback.hidden = false;
+                caption.textContent = (record.imageCaption || '历史资料图片') + ' · 点击查看大图';
+                img.onload = () => {
+                    if (token !== imageRequestToken) return;
+                    img.hidden = false;
+                    fallback.hidden = true;
+                };
+                const imageCandidates = [record.image, ...(record.imageFallbacks || [])].filter(Boolean);
+                let imageCandidateIndex = 0;
+                const loadNextImage = () => {
+                    if (imageCandidateIndex >= imageCandidates.length) {
+                        img.hidden = true;
+                        fallback.hidden = false;
+                        return;
+                    }
+                    img.src = imageCandidates[imageCandidateIndex++];
+                };
+                img.onerror = () => {
+                    if (token !== imageRequestToken) return;
+                    loadNextImage();
+                };
+                if (imageCandidates.length) {
+                    img.alt = record.imageAlt || record.title;
+                    img.loading = 'eager';
+                    loadNextImage();
+                } else {
+                    img.removeAttribute('src');
+                    img.hidden = true;
+                    fallback.hidden = false;
+                }
+            }
+
+            function renderEvent(record, index) {
+                activeIndex = index;
+                $('lcEventTag').textContent = record.tag;
+                $('lcEventIndex').textContent = index === 8 ? '补充史实' : `${String(index + 1).padStart(2, '0')} / 08`;
+                $('lcEventDate').textContent = record.date;
+                $('lcEventTitle').textContent = record.title;
+                $('lcEventDesc').textContent = record.desc;
+                setEventImage(record);
+                const spiritBox = $('lcEventSpirit');
+                spiritBox.replaceChildren();
+                const heading = document.createElement('strong');
+                heading.textContent = 'HISTORICAL SPIRIT · 精神传承';
+                spiritBox.append(heading, document.createTextNode(record.spirit));
+                Array.from(timelineEl.children).forEach((item, itemIndex) => item.classList.toggle('active', itemIndex === index));
+                Array.from(stationsEl.children).forEach((node, nodeIndex) => node.classList.toggle('active', index !== 8 && nodeIndex === index));
+            }
+
+            function updateHistoricalEvent() {
+                let index = 0;
+                for (let i = 0; i < stations.length; i++) {
+                    if (progress >= stations[i].t) index = i;
+                    else break;
+                }
+                if (index !== activeIndex) renderEvent(stations[index], index);
+            }
+
+            function updateCamera() {
+                if (!followCamera) return;
+                const point = pathEl.getPointAtLength(progress * pathLength);
+                const width = 760;
+                const height = 494;
+                const x = Math.max(0, Math.min(1000 - width, point.x - width / 2));
+                const y = Math.max(0, Math.min(650 - height, point.y - height / 2));
+                mapSvg.setAttribute('viewBox', `${x} ${y} ${width} ${height}`);
+            }
+
+            function updatePosition() {
+                const currentLength = progress * pathLength;
+                const point = pathEl.getPointAtLength(currentLength);
+                troopEl.setAttribute('transform', `translate(${point.x}, ${point.y})`);
+                trailEl.setAttribute('stroke-dasharray', `${pathLength}`);
+                trailEl.setAttribute('stroke-dashoffset', `${pathLength - currentLength}`);
+                updateCamera();
+            }
+
+            function updateProgress() {
+                $('lcCurrentMiles').textContent = Math.round(progress * 25000).toLocaleString('zh-CN');
+                $('lcProgressPercent').textContent = `${Math.round(progress * 100)}%`;
+                progressEl.value = String(Math.round(progress * 1000));
+            }
+
+            function updateAll() {
+                updatePosition();
+                updateProgress();
+                updateHistoricalEvent();
+            }
+
+            function pauseMarch() {
+                isPlaying = false;
+                if (animationId !== null) cancelAnimationFrame(animationId);
+                animationId = null;
+                lastTimestamp = 0;
+                playBtn.textContent = progress >= 1 ? '↻ 重新播放' : '▶ 继续行军';
+            }
+
+            function startMarch() {
+                if (isPlaying) return;
+                if (progress >= 1) progress = 0;
+                isPlaying = true;
+                lastTimestamp = 0;
+                playBtn.textContent = 'Ⅱ 暂停行军';
+                animationId = requestAnimationFrame(marchLoop);
+            }
+
+            function marchLoop(timestamp) {
+                if (!isPlaying) return;
+                if (!lastTimestamp) lastTimestamp = timestamp;
+                const delta = timestamp - lastTimestamp;
+                lastTimestamp = timestamp;
+                // 1×速度约 65 秒完成一次教学演示，可通过速度按钮调整。
+                progress += (delta / 65000) * speed;
+                if (progress >= 1) {
+                    progress = 1;
+                    isPlaying = false;
+                    animationId = null;
+                    lastTimestamp = 0;
+                    updateAll();
+                    playBtn.textContent = '↻ 重新播放';
+                    return;
+                }
+                updateAll();
+                animationId = requestAnimationFrame(marchLoop);
+            }
+
+            function jumpToStation(index) {
+                if (!stations[index]) return;
+                pauseMarch();
+                progress = stations[index].t;
+                updateAll();
+            }
+
+            function showHuiningEvent() {
+                pauseMarch();
+                // 会宁是独立补充史实，不伪装成中央红军路线终点。
+                progress = 1;
+                updatePosition();
+                updateProgress();
+                renderEvent(huiningRecord, 8);
+            }
+
+            playBtn.addEventListener('click', () => isPlaying ? pauseMarch() : startMarch());
+            restartBtn.addEventListener('click', () => {
+                pauseMarch();
+                progress = 0;
+                updateAll();
+            });
+            speedBtn.addEventListener('click', () => {
+                speedIndex = (speedIndex + 1) % speeds.length;
+                speed = speeds[speedIndex];
+                speedBtn.textContent = `速度 ${speed}×`;
+            });
+            progressEl.addEventListener('input', event => {
+                pauseMarch();
+                progress = Number(event.target.value) / 1000;
+                updateAll();
+            });
+
+            cameraBtn.addEventListener('click', () => {
+                followCamera = !followCamera;
+                cameraBtn.classList.toggle('active', followCamera);
+                cameraBtn.textContent = followCamera ? '◎ 退出跟随' : '◎ 跟随行军';
+                if (followCamera) updateCamera();
+                else mapSvg.setAttribute('viewBox', '0 0 1000 650');
+            });
+
+            function renderArchive() {
+                const record = archiveRecords[viewerIndex];
+                if (!record) return;
+                $('lcViewerTag').textContent = record.tag;
+                $('lcViewerDate').textContent = record.date;
+                $('lcViewerTitle').textContent = record.title;
+                $('lcViewerLead').textContent = record.lead;
+                $('lcViewerBackground').textContent = record.background;
+                $('lcViewerProcess').textContent = record.process;
+                $('lcViewerMeaning').textContent = record.meaning;
+                $('lcViewerSpirit').textContent = record.spirit;
+                $('lcViewerCaption').textContent = record.imageCaption || '历史影像资料';
+                $('lcViewerSource').textContent = record.source || '资料来源：待补充核实'; $('lcViewerSource').href = record.sourceUrl || '#'; $('lcViewerSource').style.pointerEvents = record.sourceUrl ? 'auto' : 'none';
+                $('lcViewerCounter').textContent = `${String(viewerIndex + 1).padStart(2, '0')} / ${archiveRecords.length}`;
+
+                const img = $('lcViewerImage');
+                const fallback = $('lcViewerFallback');
+                const token = ++imageRequestToken;
+                img.hidden = true;
+                fallback.hidden = false;
+                img.onload = () => {
+                    if (token !== imageRequestToken) return;
+                    img.hidden = false;
+                    fallback.hidden = true;
+                };
+                const imageCandidates = [record.image, ...(record.imageFallbacks || [])].filter(Boolean);
+                let imageCandidateIndex = 0;
+                const loadNextImage = () => {
+                    if (imageCandidateIndex >= imageCandidates.length) {
+                        img.hidden = true;
+                        fallback.hidden = false;
+                        return;
+                    }
+                    img.src = imageCandidates[imageCandidateIndex++];
+                };
+                img.onerror = () => {
+                    if (token !== imageRequestToken) return;
+                    loadNextImage();
+                };
+                if (imageCandidates.length) {
+                    img.alt = record.imageAlt || record.title;
+                    img.loading = 'eager';
+                    loadNextImage();
+                } else {
+                    img.removeAttribute('src');
+                    img.hidden = true;
+                    fallback.hidden = false;
+                }
+            }
+
+            function openArchive(index) {
+                pauseMarch();
+                viewerIndex = Math.max(0, Math.min(index, archiveRecords.length - 1));
+                renderArchive();
+                viewer.classList.add('active');
+                viewer.setAttribute('aria-hidden', 'false');
+                $('lcViewerClose').focus();
+            }
+
+            function closeArchive() {
+                viewer.classList.remove('active');
+                viewer.setAttribute('aria-hidden', 'true');
+                $('lcArchiveBtn').focus();
+            }
+
+            function changeArchive(direction) {
+                viewerIndex = (viewerIndex + direction + archiveRecords.length) % archiveRecords.length;
+                renderArchive();
+            }
+
+            $('lcArchiveBtn').addEventListener('click', () => openArchive(activeIndex < 0 ? 0 : activeIndex));
+            $('lcEventFigure').addEventListener('click', () => openArchive(activeIndex < 0 ? 0 : activeIndex));
+            $('lcEventFigure').addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openArchive(activeIndex < 0 ? 0 : activeIndex);
+                }
+            });
+            $('lcViewerClose').addEventListener('click', closeArchive);
+            $('lcViewerBackdrop').addEventListener('click', closeArchive);
+            $('lcViewerPrev').addEventListener('click', () => changeArchive(-1));
+            $('lcViewerPrevBottom').addEventListener('click', () => changeArchive(-1));
+            $('lcViewerNext').addEventListener('click', () => changeArchive(1));
+            $('lcViewerNextBottom').addEventListener('click', () => changeArchive(1));
+
+            $('lcHuiningNode').addEventListener('click', showHuiningEvent);
+            $('lcHuiningNode').addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    showHuiningEvent();
+                }
+            });
+
+            function setMapOpen(open) {
+                mapModal.classList.toggle('active', open);
+                mapModal.setAttribute('aria-hidden', open ? 'false' : 'true');
+                if (open) {
+                    if (typeof swiper !== 'undefined' && swiper.keyboard) swiper.keyboard.disable();
+                    updateAll();
+                } else {
+                    pauseMarch();
+                    if (viewer.classList.contains('active')) {
+                        viewer.classList.remove('active');
+                        viewer.setAttribute('aria-hidden', 'true');
+                    }
+                    if (typeof swiper !== 'undefined' && swiper.keyboard) swiper.keyboard.enable();
+                }
+            }
+
+            window.toggleMapModal = function () {
+                setMapOpen(!mapModal.classList.contains('active'));
+            };
+
+            $('lcMapClose').addEventListener('click', () => setMapOpen(false));
+
+            document.addEventListener('keydown', event => {
+                if (viewer.classList.contains('active')) {
+                    if (event.key === 'Escape') {
+                        event.preventDefault();
+                        closeArchive();
+                    } else if (event.key === 'ArrowLeft') {
+                        event.preventDefault();
+                        changeArchive(-1);
+                    } else if (event.key === 'ArrowRight') {
+                        event.preventDefault();
+                        changeArchive(1);
+                    }
+                    return;
+                }
+                if (event.key === 'Escape' && mapModal.classList.contains('active')) {
+                    setMapOpen(false);
+                }
+            });
+
+            function initMapEngine() {
+                if (!pathEl || typeof pathEl.getTotalLength !== 'function') return;
+                pathLength = pathEl.getTotalLength();
+                trailEl.setAttribute('d', pathEl.getAttribute('d'));
+                buildTimeline();
+                buildMapNodes();
+                updateAll();
+            }
+
+            initMapEngine();
+        })();
+    </script>
+    <script src="展厅-阶段5.js"></script>
+</body>
+</html>
